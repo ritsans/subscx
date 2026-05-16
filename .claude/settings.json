@@ -6,6 +6,7 @@
       "Bash(mkdir:*)",
       "Bash(cp:*)",
       "Bash(echo:*)",
+      "Bash(rtk read *)",
       "Bash(pnpm lint:*)",
       "Bash(pnpm format:*)",
       "Read",
@@ -33,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | xargs npx biome format --write"
+            "command": "jq -r '.tool_input.file_path' | xargs pnpm exec biome format --write"
           }
         ]
       }

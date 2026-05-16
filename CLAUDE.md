@@ -4,6 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 @AGENTS.md
 
+## Project Notes (@README.md)
+
+- `README.md` をProject To-Do Listとして運用する。会話開始時およびタスク着手前に必ず参照すること。
+- 作業の進捗に応じて以下のセクションを更新する:
+  - `## 現状`: 今取り組んでいることを1行で
+  - `## 次やること`: 直近のTodoリスト
+  - `## 詰まってる / 保留`: ブロッカーや判断保留事項
+  - `## やったこと (新しい順)`: 完了した作業を日付付きで追記 (最新を上に)
+
 ## Commands
 
 ```bash
