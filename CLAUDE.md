@@ -15,12 +15,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-```bash
-pnpm dev          # Start dev server at localhost:3000
-pnpm build        # Production build
-pnpm lint         # Biome check (lint + format check)
-pnpm format       # Biome format --write (auto)
-```
+- Development: `pnpm dev`
+- Build: `pnpm build`
+- Lint: `pnpm lint`
+- Type Check: `pnpm tsc --noEmit`
 
 ## Stack
 
