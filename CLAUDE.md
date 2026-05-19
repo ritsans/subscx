@@ -34,8 +34,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 以下のディレクトリ構造を厳守し、新しいディレクトリを増やす前に必ず人間に確認すること。
   `src/app/` (Pages/APIs), `src/components/` (UI Components), `src/lib/` (Utils/Hooks)
 - コンポーネントは原則 `Server Components`（デフォルト）とし、インタラクティブ性が必要な場合のみ最末端で `use client` を付与する。
-- 1関数は50行以内、1ファイルは150行以内とする。
-- 新規の外部ライブラリを追加することは禁止（まずは標準APIや既存の仕組みで代替案を提案すること）。
+- 勝手に新規の外部ライブラリを追加することは禁止（まずは標準APIや既存の仕組みで代替案を提案すること）。
+- You tend to start writing and implementing code immediately after outlining a plan. During the planning phase, do not write any code until I explicitly say **"implement it**
 
 ## Secure 
 
