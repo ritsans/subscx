@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | xargs pnpm exec biome format --write"
+            "command": "jq -r '.tool_input.file_path' | { read -r f; node_modules/.bin/biome format --write \"$f\"; } 2>/dev/null || true"
           }
         ]
       }
