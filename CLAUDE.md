@@ -37,6 +37,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 1関数は50行以内、1ファイルは150行以内とする。
 - 新規の外部ライブラリを追加することは禁止（まずは標準APIや既存の仕組みで代替案を提案すること）。
 
+## Secure 
+
+`.env.local`などの秘匿が必要なファイルについてはREADを禁止しています。操作が必要な場合はユーザーに手動で操作するようお願いしてください。
+
 ## Approach
 
 - Read existing files before writing. Don't re-read unless changed.
