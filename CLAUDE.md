@@ -19,6 +19,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Build: `pnpm build`
 - Lint: `pnpm lint`
 - Type Check: `pnpm tsc --noEmit`
+- DB Schema Push: `pnpm drizzle-kit push`
+- DB Generate Migration: `pnpm drizzle-kit generate`
+
+## Environment Variables (Required)
+
+- `TURSO_DATABASE_URL` — Turso DB の接続 URL
+- `TURSO_AUTH_TOKEN` — Turso 認証トークン
+- `BETTER_AUTH_SECRET` — Better Auth セッション署名用シークレット
 
 ## Stack
 
@@ -26,6 +34,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Tailwind** via `@tailwindcss/postcss`
 - **Biome** for linting and formatting. (No ESLint)
 - **TypeScript**, **pnpm** as package manager
+
+## Code Style
+
+- single quote, semicolons on, indent 2 spaces, lineWidth 120
+- JSX attributes use double quote
+- imports auto-sorted (biome assist)
 
 ## Architecture
 
@@ -39,7 +53,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Secure 
 
-`.env.local`などの秘匿が必要なファイルについてはREADを禁止しています。操作が必要な場合はユーザーに手動で操作するようお願いしてください。
+Access to sensitive files such as `.env.local` is prohibited. Do not perform any READ operations on these files. If interaction is required, instruct the user to perform the necessary steps manually.
 
 ## Approach
 
