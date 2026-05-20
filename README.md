@@ -13,6 +13,7 @@
 - [ ] 本番envファイルのコピー
 
 ## やったこと (新しい順)
+- 2026-05-20: login / signup / logout の動作確認完了（実アカウント作成で検証済み）
 - 2026-05-20: 認証フロー UI 実装完了。`/login` (タブ切替フォーム)・`/dashboard`・`/mypage`・proxy による保護を追加
 - 2026-05-19: Better Auth + Turso (libSQL) セットアップ完了。`/api/auth/get-session` 動作確認済み
 - 2026-05-19: Turso DB `subscx` 作成、Better Auth用4テーブル (user/session/account/verification) マイグレーション完了
