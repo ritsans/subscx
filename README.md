@@ -3,16 +3,17 @@
 自分用のサブスク管理アプリ。
 
 ## 現状
-Better Auth + Turso 認証基盤セットアップ完了、サインアップ/サインインUI実装待ち
+認証フロー UI 実装完了。ログイン/新規登録・ダッシュボード・マイページ・ルーティング保護が動作する状態
 
 ## 次やること
-- [ ] サインアップ/サインインUI実装
+- [ ] サブスク CRUD 実装
 - [ ] Google OAuth追加（後回し）
 
 ## 詰まってる / 保留
 -
 
 ## やったこと (新しい順)
+- 2026-05-20: 認証フロー UI 実装完了。`/login` (タブ切替フォーム)・`/dashboard`・`/mypage`・proxy による保護を追加
 - 2026-05-19: Better Auth + Turso (libSQL) セットアップ完了。`/api/auth/get-session` 動作確認済み
 - 2026-05-19: Turso DB `subscx` 作成、Better Auth用4テーブル (user/session/account/verification) マイグレーション完了
 
