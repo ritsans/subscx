@@ -49,7 +49,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `src/app/` (Pages/APIs), `src/components/` (UI Components), `src/lib/` (Utils/Hooks)
 - コンポーネントは原則 `Server Components`（デフォルト）とし、インタラクティブ性が必要な場合のみ最末端で `use client` を付与する。
 - 勝手に新規の外部ライブラリを追加することは禁止（まずは標準APIや既存の仕組みで代替案を提案すること）。
-- You tend to start writing and implementing code immediately after outlining a plan. During the planning phase, do not write any code until I explicitly say **"implement it**
+- You tend to start writing and implementing code immediately after outlining a plan. During the planning phase, do not write any code until I explicitly say **"実装して**
+
+## Environment Variables
+
+- `process.env` を直接参照しないこと。必ず `src/lib/env.ts` の `env` オブジェクトを経由する。
+- `src/lib/env.ts` は `import 'server-only'` を持つサーバー専用モジュール。クライアントコンポーネントから import するとエラーになる。
+- 新しい環境変数を追加する際は `env.ts` のオブジェクトに追記し、必須/任意を明示すること。
 
 ## Secure 
 
