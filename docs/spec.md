@@ -1,7 +1,7 @@
 # subscx MVP 設計書
 
 **作成日:** 2026-05-18  
-**更新日:** 2026-05-19
+**更新日:** 2026-05-20
 
 ## 目的
 個人のサブスクリプション管理 Web ツール MVP。追加・一覧・編集・削除ができる最小限のアプリ。
@@ -57,33 +57,39 @@ export const subscriptions = sqliteTable('subscriptions', {
 
 ## ファイル構成
 
+凡例: ✅ 実装済み / 🔜 未実装
+
 ```
 src/
-  proxy.ts                   ルート保護 (Next.js 16: middleware.ts ではなく proxy.ts)
+  proxy.ts                   ✅ ルート保護 (Next.js 16: middleware.ts ではなく proxy.ts)
   app/
-    layout.tsx               メタデータのみ (Better Auth は Provider 不要)
-    page.tsx                 一覧 + 月額合計 + 警告バナー
-    actions.ts               Server Actions (create/update/remove)
-    new/page.tsx             追加フォーム
-    edit/[id]/page.tsx       編集フォーム
-    sign-in/page.tsx         Better Auth サインインページ
-    sign-up/page.tsx         Better Auth サインアップページ
-    api/auth/[...all]/route.ts  Better Auth ルートハンドラ
+    layout.tsx               ✅ メタデータのみ (Better Auth は Provider 不要)
+    page.tsx                 ✅ トップページ (現状はリダイレクト等)
+    login/page.tsx           ✅ ログイン/新規登録タブ切替フォーム (sign-in・sign-up を統合)
+    dashboard/page.tsx       ✅ ダッシュボード (一覧 + 月額合計 + 警告バナー、CRUD実装前のスケルトン)
+    mypage/page.tsx          ✅ マイページ (ログアウト等)
+    actions.ts               🔜 Server Actions (create/update/remove)
+    new/page.tsx             🔜 追加フォーム
+    edit/[id]/page.tsx       🔜 編集フォーム
+    api/auth/[...all]/route.ts  ✅ Better Auth ルートハンドラ
   components/
-    SubscriptionForm.tsx     フォーム UI (追加/編集共用)
-    SubscriptionList.tsx     一覧 UI
-    GoogleSignInButton.tsx   Google OAuth ボタン (use client)
+    auth-form.tsx            ✅ ログイン/新規登録フォーム UI (use client、タブ切替)
+    sign-out-button.tsx      ✅ サインアウトボタン (use client)
+    SubscriptionForm.tsx     🔜 フォーム UI (追加/編集共用)
+    SubscriptionList.tsx     🔜 一覧 UI
   lib/
-    types.ts                 型定義 (Subscription, BillingCycle)
-    auth-schema.ts           Better Auth 生成テーブル (CLI 生成、手編集しない)
-    schema.ts                auth-schema re-export + subscriptions テーブル
-    db.ts                    Drizzle + Turso クライアントシングルトン
-    auth.ts                  Better Auth サーバー設定 (Drizzle adapter + nextCookies)
-    auth-client.ts           Better Auth クライアント (use client コンポーネント専用)
-    subscriptions.ts         CRUD クエリ (listAll/getOne/create/update/remove)
+    env.ts                   ✅ 環境変数ラッパー (server-only)
+    auth-schema.ts           ✅ Better Auth 生成テーブル (CLI 生成、手編集しない)
+    schema.ts                ✅ auth-schema re-export + subscriptions テーブル
+    db.ts                    ✅ Drizzle + Turso クライアントシングルトン
+    auth.ts                  ✅ Better Auth サーバー設定 (Drizzle adapter + nextCookies)
+    auth-client.ts           ✅ Better Auth クライアント (use client コンポーネント専用)
+    get-session.ts           ✅ `auth.api.getSession` のサーバー向けラッパー
+    types.ts                 🔜 型定義 (Subscription, BillingCycle)
+    subscriptions.ts         🔜 CRUD クエリ (listAll/getOne/create/update/remove)
 
-drizzle.config.ts            Drizzle Kit 設定 (プロジェクトルート)
-.env.example                 環境変数テンプレート
+drizzle.config.ts            ✅ Drizzle Kit 設定 (プロジェクトルート)
+.env.example                 ✅ 環境変数テンプレート
 ```
 
 ## 制約
