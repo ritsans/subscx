@@ -3,16 +3,17 @@
 自分用のサブスク管理アプリ。
 
 ## 現状
-認証フロー 実装完了。ログイン/新規登録・ダッシュボード・マイページ・ルーティング保護が動作する状態。
+第1周 (walking skeleton) 完了。フォーム送信 → DB保存 → 一覧表示の最小サイクルが動作する状態。
 
 ## 次やること
-- [ ] UIの実装。現状ユーザー認証のテストの際に使ったままのボーンベアー状態である。
+- [ ] 第2周: CRUD完成 (getOne / update / remove + zod + 編集UI)
 ~~- [ ] Google OAuth追加（後回し）~~
 
 ## 詰まってる / 保留
 
 
 ## やったこと (新しい順)
+- 2026-05-21: 第1周完了。types / schema / db / subscriptions / actions / dashboard を実装。フォーム→DB保存→一覧表示の動作確認済み
 - 2026-05-20: login / signup / logout の動作確認完了（実アカウント作成で検証済み）
 - 2026-05-20: 認証フロー UI 実装完了。`/login` (タブ切替フォーム)・`/dashboard`・`/mypage`・proxy による保護を追加
 - 2026-05-19: Better Auth + Turso (libSQL) セットアップ完了。`/api/auth/get-session` 動作確認済み
