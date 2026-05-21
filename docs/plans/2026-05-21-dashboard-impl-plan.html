@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ダッシュボード実装計画 — 縦割り3周</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #181b22;
+    --panel-2: #1f232c;
+    --border: #2a2f3a;
+    --text: #e6e8ec;
+    --muted: #9aa1ad;
+    --accent: #7c8cff;
+    --green: #4ade80;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 64px 24px 120px; }
+
+  header.hero {
+    margin-bottom: 56px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .hero p { color: var(--muted); font-size: 15px; max-width: 620px; }
+  .meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .meta span b { color: var(--text); font-weight: 600; }
+
+  section { margin-bottom: 48px; }
+  h2 {
+    font-size: 13px;
+    font-family: var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 26px;
+  }
+  .panel + .panel { margin-top: 16px; }
+
+  .problem .panel { border-left: 3px solid var(--red); }
+  .problem h3 { color: var(--red); }
+  .principle .panel { border-left: 3px solid var(--accent); }
+
+  h3 { font-size: 17px; font-weight: 650; margin-bottom: 10px; }
+  .panel p { color: var(--muted); font-size: 14.5px; }
+  .panel p + p { margin-top: 10px; }
+  .panel strong { color: var(--text); font-weight: 600; }
+
+  ul.clean { list-style: none; margin-top: 12px; }
+  ul.clean li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 7px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  ul.clean li::before {
+    content: "›";
+    position: absolute;
+    left: 4px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* round cards */
+  .rounds { display: flex; flex-direction: column; gap: 18px; }
+  .round {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .round-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .round-num {
+    flex: none;
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .r1 .round-num { background: rgba(124,140,255,0.15); color: var(--accent); }
+  .r2 .round-num { background: rgba(74,222,128,0.15); color: var(--green); }
+  .r3 .round-num { background: rgba(251,191,36,0.15); color: var(--amber); }
+  .round-title { font-size: 18px; font-weight: 650; }
+  .round-title small {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 400;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-top: 2px;
+  }
+  .round-body { padding: 22px 24px; }
+  .goal {
+    font-size: 14.5px;
+    color: var(--text);
+    background: var(--panel-2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+  .goal b { color: var(--accent); }
+
+  .col-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 640px) { .col-2 { grid-template-columns: 1fr; } }
+  .col-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .col-in .col-label { color: var(--green); }
+  .col-out .col-label { color: var(--muted); }
+
+  ul.files { list-style: none; }
+  ul.files li {
+    font-size: 13.5px;
+    margin-bottom: 6px;
+    color: var(--muted);
+  }
+  ul.files li code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 1px 6px;
+    color: var(--text);
+  }
+  ul.files.out li { opacity: 0.62; }
+  ul.files.out li::before { content: "✕  "; color: var(--red); }
+  ul.files.in li::before { content: "+  "; color: var(--green); font-family: var(--mono); }
+
+  .checkpoint {
+    margin-top: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text);
+    background: rgba(74,222,128,0.07);
+    border: 1px solid rgba(74,222,128,0.25);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .checkpoint .icon { flex: none; }
+  .checkpoint.win {
+    background: rgba(74,222,128,0.12);
+    border-color: rgba(74,222,128,0.45);
+  }
+  .checkpoint.win b { color: var(--green); }
+
+  ol.steps { list-style: none; counter-reset: s; }
+  ol.steps li {
+    counter-increment: s;
+    position: relative;
+    padding-left: 34px;
+    margin-bottom: 9px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  ol.steps li::before {
+    content: counter(s);
+    position: absolute;
+    left: 0; top: 1px;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--amber);
+    font-family: var(--mono);
+    font-size: 12px;
+    display: grid;
+    place-items: center;
+  }
+  ol.steps li b { color: var(--text); font-weight: 600; }
+
+  /* todo checklist */
+  .todo {
+    margin-top: 18px;
+    border-top: 1px dashed var(--border);
+    padding-top: 16px;
+  }
+  .todo-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  ul.todo-list { list-style: none; }
+  ul.todo-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--muted);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(42,47,58,0.5);
+  }
+  ul.todo-list li:last-child { border-bottom: none; }
+  ul.todo-list li .box {
+    flex: none;
+    width: 16px; height: 16px;
+    margin-top: 2px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+  }
+  ul.todo-list li .num {
+    flex: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+    width: 24px;
+  }
+  ul.todo-list li code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0 5px;
+    color: var(--text);
+  }
+  ul.todo-list li b { color: var(--text); font-weight: 600; }
+  ul.todo-list li.verify { color: var(--green); }
+  ul.todo-list li.verify .box { border-color: var(--green); background: rgba(74,222,128,0.12); }
+  ul.todo-list li.verify b { color: var(--green); }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">Implementation Plan / subscx</div>
+    <h1>ダッシュボード実装計画<br />縦割り3周への再構成</h1>
+    <p>機能を積み上げる横割りプランを、薄く一周させる縦割りプランへ組み替える。狙いはただ一つ — 「実装が終わらない」を構造的に起こさないこと。</p>
+    <div class="meta">
+      <span>日付 <b>2026-05-21</b></span>
+      <span>対象 <b>dashboard / CRUD</b></span>
+      <span>v1スコープ <b>サブスク CRUD</b></span>
+      <span>テーマ <b>ライトのみ</b></span>
+    </div>
+  </header>
+
+  <section class="problem">
+    <h2>なぜ再構成するのか</h2>
+    <div class="panel">
+      <h3>挫折の正体 — 「実装が終わらない」</h3>
+      <p>従来の17タスクプランは<strong>横割り</strong>だった。全部の型 → 全部の lib → 全部の component → 最後に画面、という順序。アプリが初めて動くのは Task 15、つまり最後。</p>
+      <p>結果、そこに着くまで14回ぶん「<strong>型は通るが動くか不明</strong>」が積み上がる。型が通ることとアプリが動くことは別物。動作確認が最後の1回しかなく、途中の達成感がゼロ。これが「永遠に未完成」を生む構造だった。</p>
+    </div>
+  </section>
+
+  <section class="principle">
+    <h2>2つの原則</h2>
+    <div class="panel">
+      <h3>① 縦に薄く一周させる</h3>
+      <p>横割り(層ごと)をやめ、縦割り(機能の一筋)にする。各周の終わりに必ず <code style="font-family:var(--mono);font-size:12.5px;background:var(--panel-2);border:1px solid var(--border);border-radius:5px;padding:1px 6px;">pnpm dev</code> で目視確認する。<strong>どこで力尽きても、動くアプリが手元に残る。</strong></p>
+    </div>
+    <div class="panel">
+      <h3>② 勝利ラインを先に固定する</h3>
+      <p><strong>「CRUD全部が動く = 第2周完了 = v1完成」</strong>。これを最初に宣言しておく。ここを越えたら、残りは全て「動くアプリの装飾」であり、諦めても v1 は壊れない。終わりが自分で判定できる状態を作る。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>3周の構成</h2>
+    <div class="rounds">
+
+      <!-- ROUND 1 -->
+      <div class="round r1">
+        <div class="round-head">
+          <div class="round-num">1</div>
+          <div class="round-title">歩く骨格
+            <small>walking skeleton</small>
+          </div>
+        </div>
+        <div class="round-body">
+          <div class="goal">ゴール — <b>pnpm dev</b> を開いて「フォーム送信 → DB保存 → カードが1枚出る」を実際に目で見る。</div>
+          <div class="col-2">
+            <div class="col-in">
+              <div class="col-label">この周でやる</div>
+              <ul class="files in">
+                <li><code>src/lib/schema.ts</code> — subscriptions テーブル + auth-schema 再エクスポート</li>
+                <li><code>src/lib/db.ts</code> — Drizzle + Turso シングルトン</li>
+                <li><code>drizzle.config.ts</code> — schema パス変更 → drizzle-kit push</li>
+                <li><code>src/lib/types.ts</code> — Subscription / Category / BillingCycle</li>
+                <li><code>src/lib/subscriptions.ts</code> — create と listAll の2関数だけ</li>
+                <li><code>src/app/actions.ts</code> — createSubscription のみ。zod なし、最低限の手書き検証</li>
+                <li><code>src/app/dashboard/page.tsx</code> — listAll → 素の ul 一覧。ページ直置きの素HTML form</li>
+              </ul>
+            </div>
+            <div class="col-out">
+              <div class="col-label">この周では入れない</div>
+              <ul class="files out">
+                <li>shadcn / Dialog / モーダル</li>
+                <li>Update / Delete</li>
+                <li>zod</li>
+                <li>simple-icons</li>
+                <li>サマリーカード</li>
+                <li>カテゴリフィルタ</li>
+                <li>ヘッダー</li>
+                <li>Frontend Design</li>
+              </ul>
+            </div>
+          </div>
+          <div class="checkpoint">
+            <span class="icon">⏸</span>
+            <span>ブラウザで実際に1件追加してカードが出るのを確認 → コミット → <b>ここで一度休んでよい</b>。この時点でデータが永続化されるサブスク管理アプリが既に存在する。</span>
+          </div>
+
+          <div class="todo">
+            <div class="todo-label">TODO — 第1周</div>
+            <ul class="todo-list">
+              <li><span class="num">1.1</span><span class="box"></span><span><code>src/lib/types.ts</code> を作成 — <b>Subscription / Category / BillingCycle</b> 型と CATEGORIES 定数。</span></li>
+              <li><span class="num">1.2</span><span class="box"></span><span><code>src/lib/schema.ts</code> を作成 — subscriptions テーブル定義 + <code>auth-schema</code> 再エクスポート。</span></li>
+              <li><span class="num">1.3</span><span class="box"></span><span><code>src/lib/db.ts</code> を作成 — Drizzle + Turso クライアントのシングルトン。</span></li>
+              <li><span class="num">1.4</span><span class="box"></span><span><code>drizzle.config.ts</code> の schema パスを <code>schema.ts</code> に変更。</span></li>
+              <li><span class="num">1.5</span><span class="box"></span><span><code>pnpm drizzle-kit push</code> で subscriptions テーブルを Turso に反映。</span></li>
+              <li><span class="num">1.6</span><span class="box"></span><span><code>src/lib/subscriptions.ts</code> を作成 — <b>create と listAll の2関数だけ</b>。全クエリ user_id 必須。</span></li>
+              <li><span class="num">1.7</span><span class="box"></span><span><code>src/app/actions.ts</code> を作成 — <b>createSubscription のみ</b>。zod なし、name 空チェック程度の手書き検証。</span></li>
+              <li><span class="num">1.8</span><span class="box"></span><span><code>dashboard/page.tsx</code> を書き換え — listAll で取得し、素の <code>&lt;ul&gt;</code> 一覧 + ページ直置きの素HTML <code>&lt;form&gt;</code>。</span></li>
+              <li><span class="num">1.9</span><span class="box"></span><span><code>pnpm tsc --noEmit</code> と <code>pnpm lint</code> が通ることを確認。</span></li>
+              <li class="verify"><span class="num">1.10</span><span class="box"></span><span><b>目視確認</b> — <code>pnpm dev</code> で /dashboard を開き、1件追加 → カードが出るのを確認。OK ならコミット。</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROUND 2 -->
+      <div class="round r2">
+        <div class="round-head">
+          <div class="round-num">2</div>
+          <div class="round-title">CRUD完成 = 勝利ライン
+            <small>victory line</small>
+          </div>
+        </div>
+        <div class="round-body">
+          <div class="goal">ゴール — 追加・編集・削除すべてが動く。ここを越えたら <b>v1完成</b>。README の「サブスク CRUD」が満たされる。</div>
+          <ul class="clean">
+            <li><strong>subscriptions.ts</strong> に getOne / update / remove を追加。全関数 userId + id 両方を条件にし、他人のレコードを触れないようにする。</li>
+            <li><strong>actions.ts</strong> に updateSubscription / removeSubscription を追加。ここで zod を導入し、3アクションまとめて検証へ昇格(第1周の手書き検証から置き換え)。</li>
+            <li><strong>編集UI</strong> — 第1周の素HTMLフォームを「追加 / 編集 共用フォーム」に拡張。subscription prop ありで編集モード、なしで追加モード。削除ボタンも編集モードに置く。</li>
+            <li><strong>まだ shadcn / Dialog は入れない。</strong>編集は「カードを押すと同じページにフォームが出る」程度の素の出し分けで十分。モーダル化は装飾なので第3周。</li>
+          </ul>
+          <div class="checkpoint win">
+            <span class="icon">★</span>
+            <span>ブラウザで 追加 → 編集 → 削除 を一通り実行して確認 → コミット。<b>勝利ライン到達。</b>以降どこで力尽きても v1 は完成済み。</span>
+          </div>
+
+          <div class="todo">
+            <div class="todo-label">TODO — 第2周</div>
+            <ul class="todo-list">
+              <li><span class="num">2.1</span><span class="box"></span><span><code>subscriptions.ts</code> に <b>getOne / update / remove</b> を追加。update と remove は id + user_id 両方を条件にする。</span></li>
+              <li><span class="num">2.2</span><span class="box"></span><span>zod をインストール(<code>pnpm add zod</code> をユーザーに提示)。</span></li>
+              <li><span class="num">2.3</span><span class="box"></span><span><code>actions.ts</code> に <b>updateSubscription / removeSubscription</b> を追加し、3アクションを zod 検証に置き換え。</span></li>
+              <li><span class="num">2.4</span><span class="box"></span><span>フォームを「追加 / 編集 共用」に拡張 — <code>subscription</code> prop ありで編集モード、なしで追加モード。</span></li>
+              <li><span class="num">2.5</span><span class="box"></span><span>編集モードに削除ボタンを追加。</span></li>
+              <li><span class="num">2.6</span><span class="box"></span><span>カードクリックで編集フォームが出る出し分けを実装(モーダルなし、同ページに表示)。</span></li>
+              <li><span class="num">2.7</span><span class="box"></span><span><code>pnpm tsc --noEmit</code> と <code>pnpm lint</code> が通ることを確認。</span></li>
+              <li class="verify"><span class="num">2.8</span><span class="box"></span><span><b>目視確認 = 勝利ライン</b> — 追加 → 編集 → 削除 を一通り実行。動いたらコミット。<b>v1完成</b>。</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROUND 3 -->
+      <div class="round r3">
+        <div class="round-head">
+          <div class="round-num">3</div>
+          <div class="round-title">装飾
+            <small>polish — 諦めても v1 は壊れない</small>
+          </div>
+        </div>
+        <div class="round-body">
+          <div class="goal">ゴール — 動くアプリをよくする。各項目は独立。<b>どれを諦めても v1 は壊れない。</b></div>
+          <ol class="steps">
+            <li><b>shadcn 導入 + モーダル化</b> — dialog / button / input / label / select / textarea を追加し、フォームを Dialog の中へ。</li>
+            <li><b>サマリーカード</b> — billing.ts(月額 / 年額換算の純粋関数)+ summary-cards.tsx。</li>
+            <li><b>カテゴリフィルタ</b> — category-pill.tsx + 一覧のクライアント絞り込み。</li>
+            <li><b>ブランドアイコン</b> — simple-icons + icon-map.ts + service-icon.tsx。未知の名前は頭文字バッジにフォールバック。</li>
+            <li><b>ヘッダー</b> — app-header.tsx。</li>
+            <li><b>Frontend Design skill で仕上げ</b> — 「量産型 AI-slop」の排除はこの最後だけ。</li>
+          </ol>
+          <div class="checkpoint">
+            <span class="icon">✓</span>
+            <span>各項目を終えるたびにコミット。「終わらない」は起きない — 終わりは第2周で既に来ているから。</span>
+          </div>
+
+          <div class="todo">
+            <div class="todo-label">TODO — 第3周(上から優先度順 / 各項目ごとにコミット)</div>
+            <ul class="todo-list">
+              <li><span class="num">3.1</span><span class="box"></span><span>shadcn/ui を初期化し、dialog / button / input / label / select / textarea を追加。</span></li>
+              <li><span class="num">3.2</span><span class="box"></span><span>共用フォームを shadcn Dialog の中へ移し、追加 / 編集をモーダル化。</span></li>
+              <li><span class="num">3.3</span><span class="box"></span><span><code>src/lib/billing.ts</code> を作成 — 月額 / 年額換算の純粋関数。</span></li>
+              <li><span class="num">3.4</span><span class="box"></span><span><code>summary-cards.tsx</code> を作成 — 月額合計 / 年額換算 / 登録件数の3枚。</span></li>
+              <li><span class="num">3.5</span><span class="box"></span><span><code>category-pill.tsx</code> + 一覧のクライアント側カテゴリ絞り込みを実装。</span></li>
+              <li><span class="num">3.6</span><span class="box"></span><span>simple-icons をインストールし、<code>icon-map.ts</code> + <code>service-icon.tsx</code>(未知名は頭文字バッジ)。</span></li>
+              <li><span class="num">3.7</span><span class="box"></span><span><code>app-header.tsx</code> を作成 — ロゴ / ナビ / アバター。</span></li>
+              <li class="verify"><span class="num">3.8</span><span class="box"></span><span><b>仕上げ</b> — Frontend Design skill で「量産型 AI-slop」を排除。最終目視確認 → コミット。</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>前提・注意(全周共通)</h2>
+    <div class="panel">
+      <ul class="clean">
+        <li>ライトテーマのみ実装。ダークテーマは不要。</li>
+        <li><code style="font-family:var(--mono);font-size:12.5px;background:var(--panel-2);border:1px solid var(--border);border-radius:5px;padding:1px 6px;">process.env</code> を直接参照しない。サーバー専用の値は <code style="font-family:var(--mono);font-size:12.5px;background:var(--panel-2);border:1px solid var(--border);border-radius:5px;padding:1px 6px;">src/lib/env.ts</code> の env 経由。</li>
+        <li>全 DB クエリで user_id を必須にする。</li>
+        <li>3ディレクトリ構造厳守 — src/app / src/components / src/lib。新ディレクトリは src/components/ui(shadcn 生成物)のみ承認済み。</li>
+        <li>パッケージマネージャは pnpm。ライブラリ install はコマンドを提示し、人間が手動実行する。</li>
+        <li>各周末の目視確認は必須。型チェック通過は「動く」の代わりにならない。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    docs/plans/2026-05-21-dashboard-impl-plan.html · subscx · 縦割り3周構成 · 勝利ライン = 第2周完了
+  </footer>
+
+</div>
+</body>
+</html>
