@@ -35,11 +35,10 @@ export function BrandPanel() {
         </p>
       </div>
 
-      {/* プレビューカード */}
+      {/* プレビューカード (後から実データで復活予定)
       <div className="rounded-2xl border border-stone-100 bg-white px-5 py-4 shadow-sm">
         <p className="mb-3 text-stone-400 text-xs">今月の合計</p>
         <div className="flex items-center gap-3">
-          {/* カテゴリアイコンチップ (重ね表示) */}
           <div className="flex items-center">
             {[
               { label: 'a', bg: 'bg-violet-500' },
@@ -58,6 +57,7 @@ export function BrandPanel() {
           <span className="font-bold text-stone-900 text-xl">¥18,450</span>
         </div>
       </div>
+      */}
     </div>
   );
 }
