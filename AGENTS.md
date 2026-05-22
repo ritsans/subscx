@@ -10,3 +10,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Build: `pnpm build`
 - Lint: `pnpm lint`
 - Type Check: `pnpm tsc --noEmit`
+
+* コードレビューをする前には、Lintを実行して静的エラーチェックを先に解決させておく。

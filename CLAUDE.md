@@ -13,6 +13,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `## 詰まってる / 保留`: ブロッカーや判断保留事項
   - `## やったこと (新しい順)`: 完了した作業を日付付きで追記 (最新を上に)
 
+プラン参照:
+- 設計書  `docs/spec.md`
+- 設計計画書  `docs/plan.md`
+
+終了したタスクはチェックを入れること `e.g: [ ]  -> [x]`
+ 
 ## Commands
 
 - Development: `pnpm dev`
