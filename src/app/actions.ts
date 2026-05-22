@@ -1,9 +1,20 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+import { getSession } from '@/lib/get-session';
 import { createSubscription } from '@/lib/subscriptions';
 import { CATEGORIES } from '@/lib/types';
-import { getSession } from '@/lib/get-session';
-import { revalidatePath } from 'next/cache';
+
+function isValidDateInput(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+
+  const [year, month, day] = value.split('-').map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
 
 export async function createSubscriptionAction(formData: FormData) {
   const session = await getSession();
@@ -31,8 +42,8 @@ export async function createSubscriptionAction(formData: FormData) {
   }
 
   const nextBillingDate = formData.get('nextBillingDate');
-  if (!nextBillingDate || typeof nextBillingDate !== 'string') {
-    throw new Error('次回請求日は必須です');
+  if (!nextBillingDate || typeof nextBillingDate !== 'string' || !isValidDateInput(nextBillingDate)) {
+    throw new Error('次回請求日が不正です');
   }
 
   const memo = formData.get('memo');
