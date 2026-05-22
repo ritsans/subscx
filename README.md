@@ -3,15 +3,19 @@
 自分用のサブスク管理アプリ。
 
 ## 現状
-第2周 (CRUD完成) 目視確認済み。v1完成。
+ログイン画面 UI 刷新完了。2カラムレイアウト・BrandPanel・LoginForm 実装済み。
 
 ## 次やること
-- [ ] 第3周: 装飾 (shadcn/ui導入, デザインカンプ, 月額合計, カテゴリ絞り込み)
+- 新規登録画面 (`/signup`) の実装
+- `auth-form.tsx` の削除 (signup 実装後)
+- BrandPanel プレビューカードを実データで復活
 
 ## 詰まってる / 保留
 
 
 ## やったこと (新しい順)
+- 2026-05-22: ログイン画面 UI 刷新。デザインカンプ基づき2カラムレイアウト (BrandPanel + LoginForm)、rememberMe・パスワード表示トグル実装
+- 2026-05-22: 第3周完了。shadcn/ui導入、ダッシュボードUI全面刷新 (カードグリッド・モーダルCRUD・カテゴリ絞り込み・サマリー3カード)。テーマ設定を `docs/theme.md` に文書化
 - 2026-05-22: 第2周実装完了。getOne/update/remove + zod v4 + SubscriptionForm + searchParams inline edit UI
 - 2026-05-21: 第1周完了。types / schema / db / subscriptions / actions / dashboard を実装。フォーム→DB保存→一覧表示の動作確認済み
 - 2026-05-20: login / signup / logout の動作確認完了（実アカウント作成で検証済み）
