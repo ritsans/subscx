@@ -18,7 +18,7 @@ export function LoginForm() {
   const [error, setError] = useState('');
   const [pending, setPending] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     setError('');
     setPending(true);
