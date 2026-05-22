@@ -18,7 +18,7 @@ export function LoginForm() {
   const [error, setError] = useState('');
   const [pending, setPending] = useState(false);
 
-  async function handleSubmit(e: React.SyntheticEvent) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     setError('');
     setPending(true);
@@ -33,8 +33,8 @@ export function LoginForm() {
         setError(err.message ?? 'ログインに失敗しました');
         return;
       }
-      router.push('/dashboard');
       router.refresh();
+      router.push('/dashboard');
     } finally {
       setPending(false);
     }
@@ -100,11 +100,17 @@ export function LoginForm() {
               />
               <span className="text-sm text-stone-600">ログイン状態を保持</span>
             </label>
-            <span className="text-sm text-violet-600">パスワードを忘れた</span>
+            <button type="button" disabled className="text-sm text-violet-600 opacity-60 cursor-not-allowed">
+              パスワードを忘れた
+            </button>
           </div>
 
           {/* エラー */}
-          {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
+          {error && (
+            <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+              {error}
+            </p>
+          )}
 
           {/* 送信ボタン */}
           <Button
