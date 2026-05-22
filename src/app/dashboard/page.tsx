@@ -44,12 +44,11 @@ export default async function DashboardPage({ searchParams }: Props) {
               style={{
                 border: sub.id === editId ? '2px solid #0070f3' : '1px solid #ddd',
                 borderRadius: 8,
-                padding: '12px 16px',
               }}
             >
               <a
                 href={`/dashboard?edit=${sub.id}`}
-                style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+                style={{ textDecoration: 'none', color: 'inherit', display: 'block', padding: '12px 16px' }}
               >
                 <strong>{sub.name}</strong>
                 <span style={{ marginLeft: 8, fontSize: 12, color: '#666' }}>{sub.category}</span>
