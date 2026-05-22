@@ -7,7 +7,10 @@ export function BrandPanel() {
 
       {/* ロゴ */}
       <div className="flex items-center gap-2.5">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-violet-600 font-bold text-sm text-white">
+        <div
+          aria-hidden="true"
+          className="flex size-8 items-center justify-center rounded-lg bg-violet-600 font-bold text-sm text-white"
+        >
           s
         </div>
         <span className="font-semibold text-base text-stone-800">subscx</span>
@@ -16,13 +19,13 @@ export function BrandPanel() {
       {/* メインコピー */}
       <div className="space-y-6">
         <p className="font-semibold text-violet-600 text-xs uppercase tracking-widest">Subscriptions, Simplified</p>
-        <h1 className="font-bold text-4xl text-stone-900 leading-tight">
+        <p className="text-4xl font-bold leading-tight text-stone-900">
           毎月の
           <br />
           サブスクを、
           <br />
           ひと目で。
-        </h1>
+        </p>
         <p className="text-sm text-stone-500 leading-relaxed">
           登録しているサービスをまとめて管理。
           <br />
@@ -46,8 +49,7 @@ export function BrandPanel() {
             ].map((chip, i) => (
               <div
                 key={chip.label}
-                className={`flex size-7 items-center justify-center rounded-full border-2 border-white font-bold text-[10px] text-white ${chip.bg}`}
-                style={{ marginLeft: i === 0 ? 0 : -8 }}
+                className={`flex size-7 items-center justify-center rounded-full border-2 border-white text-[10px] font-bold text-white ${chip.bg} ${i > 0 ? '-ml-2' : ''}`}
               >
                 {chip.label}
               </div>
