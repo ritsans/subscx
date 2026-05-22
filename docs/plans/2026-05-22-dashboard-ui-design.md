@@ -60,10 +60,9 @@ src/components/dashboard/
 
 ## 3. モーダルとインタラクション
 
-### ServiceModal (`<dialog>` 利用)
+### ServiceModal (shadcn/ui `Dialog` 利用)
 
-- ネイティブ `<dialog>` を使用。`showModal()` で開き、`::backdrop` で背景暗転、
-  Esc キーで閉じる (標準挙動)
+- shadcn/ui の `Dialog` / `DialogContent` / `DialogHeader` を使用。Esc・backdrop クリックで閉じる (標準挙動)
 - 1 つのモーダルで「追加」「編集」両モードを兼ねる。`subscription` prop の有無で
   タイトル (サービスを追加 / サービスを編集) とフォーム動作を切り替え
 - 状態は `ServiceGrid` (またはその親 client コンポーネント) が保持:
@@ -73,9 +72,9 @@ src/components/dashboard/
 
 ### 「···」メニュー (ServiceCard 内)
 
-- カード右上「···」ボタンクリックで小ポップオーバー (編集 / 削除) を表示
+- shadcn/ui の `DropdownMenu` / `DropdownMenuContent` / `DropdownMenuItem` を使用
+- カード右上「···」ボタンクリックで編集 / 削除メニューを表示
 - カード本体クリックは無効
-- メニュー外クリックで閉じる (`useRef` + document クリックリスナー、または `<details>` 要素)
 - 「編集」→ 親に編集モーダルを開かせる / 「削除」→ 確認の上 `removeSubscriptionAction`
 
 ### カテゴリ絞り込み (ServiceGrid 内)
@@ -118,14 +117,40 @@ aiCount      = subs.filter(s => s.category==='AI').length
 | ファイル | 変更内容 |
 |---|---|
 | `types.ts` | `CATEGORY_COLORS` 追加 |
-| `SubscriptionForm.tsx` | インライン style → Tailwind、ServiceModal 内で使う前提に調整 |
+| `SubscriptionForm.tsx` | インライン style → Tailwind + shadcn/ui (`Input`/`Select`/`Label`/`Button`) に置換、ServiceModal 内で使う前提に調整 |
 | `dashboard/page.tsx` | 全面書き換え (集計 + 新コンポーネント呼び出し) |
 | `actions.ts` / `subscriptions.ts` | 変更なし (既存 Server Action をそのまま利用) |
 
-## 6. 確定した設計判断
+## 6. セットアップ手順
+
+実装開始前に以下をinitを手動で実行すること。
+
+```bash
+pnpm dlx shadcn@latest init
+```
+
+Example:
+```pnpm dlx shadcn@latest init --preset b2D1F0Ops --template next --pointer
+```
+
+- Style: **Default**
+- Base color: 任意 (後でカスタマイズ)
+- CSS variables: Yes
+
+その後、使用するコンポーネントを個別追加:
+
+```bash
+pnpm dlx shadcn@latest add dialog dropdown-menu button input select label card
+```
+
+## 7. 確定した設計判断
 
 - カンプは見た目の参考。未実装要素はダミー静的表示
-- スタイリングは Tailwind のみ。追加ライブラリなし。モーダルは `<dialog>`
+- shadcn/ui (Default テーマ) を導入。テーマカスタマイズは後回し
+  - `Dialog`: ServiceModal
+  - `DropdownMenu`: 「···」メニュー
+  - `Input` / `Select` / `Label` / `Button`: SubscriptionForm フォーム部品
+  - `Card`: SummaryCards およびサービスカード (必要に応じて)
 - モーダル開閉はクライアント state で制御 (URL searchParams は使わない)
 - 「···」クリックで編集/削除の小メニュー。カード本体クリックは無効
 - 今月の合計は年払いも月額換算して合算
