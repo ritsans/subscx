@@ -1,5 +1,5 @@
 import 'server-only';
-import { asc, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import { db } from './db';
 import { subscriptions } from './schema';
 import type { BillingCycle, Category, Subscription } from './types';
@@ -36,4 +36,43 @@ export async function listAll(userId: string): Promise<Subscription[]> {
     .orderBy(asc(subscriptions.nextBillingDate));
 
   return rows as Subscription[];
+}
+
+export async function getOne(id: string, userId: string): Promise<Subscription | null> {
+  const rows = await db
+    .select()
+    .from(subscriptions)
+    .where(and(eq(subscriptions.id, id), eq(subscriptions.userId, userId)))
+    .limit(1);
+  return (rows[0] as Subscription) ?? null;
+}
+
+export async function updateSubscription(
+  id: string,
+  userId: string,
+  data: {
+    name: string;
+    category: Category;
+    price: number;
+    billingCycle: BillingCycle;
+    nextBillingDate: string;
+    memo?: string;
+  },
+): Promise<void> {
+  await db
+    .update(subscriptions)
+    .set({
+      name: data.name,
+      category: data.category,
+      price: data.price,
+      billingCycle: data.billingCycle,
+      nextBillingDate: data.nextBillingDate,
+      memo: data.memo ?? null,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(subscriptions.id, id), eq(subscriptions.userId, userId)));
+}
+
+export async function removeSubscription(id: string, userId: string): Promise<void> {
+  await db.delete(subscriptions).where(and(eq(subscriptions.id, id), eq(subscriptions.userId, userId)));
 }
