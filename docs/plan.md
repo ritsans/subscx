@@ -15,28 +15,28 @@
 
 ゴール: フォーム送信 → DB保存 → カードが1枚出る、を目で見る。
 
-- [ ] 1.1 `src/lib/types.ts` — Subscription / Category / BillingCycle 型と CATEGORIES 定数
-- [ ] 1.2 `src/lib/schema.ts` — subscriptions テーブル + auth-schema 再エクスポート
-- [ ] 1.3 `src/lib/db.ts` — Drizzle + Turso シングルトン
-- [ ] 1.4 `drizzle.config.ts` — schema パスを `schema.ts` に変更
-- [ ] 1.5 `pnpm drizzle-kit push` で subscriptions テーブルを Turso に反映
-- [ ] 1.6 `src/lib/subscriptions.ts` — create と listAll の2関数だけ (全クエリ user_id 必須)
-- [ ] 1.7 `src/app/actions.ts` — createSubscription のみ (zod なし、手書き検証)
-- [ ] 1.8 `src/app/dashboard/page.tsx` — 素の `<ul>` 一覧 + ページ直置きの素HTML `<form>`
-- [ ] 1.9 `pnpm tsc --noEmit` と `pnpm lint` が通る
-- [ ] 1.10 目視確認: `pnpm dev` で 1件追加 → カード表示。OK ならコミット
+- [x] 1.1 `src/lib/types.ts` — Subscription / Category / BillingCycle 型と CATEGORIES 定数
+- [x] 1.2 `src/lib/schema.ts` — subscriptions テーブル + auth-schema 再エクスポート
+- [x] 1.3 `src/lib/db.ts` — Drizzle + Turso シングルトン
+- [x] 1.4 `drizzle.config.ts` — schema パスを `schema.ts` に変更
+- [x] 1.5 `pnpm drizzle-kit push` で subscriptions テーブルを Turso に反映
+- [x] 1.6 `src/lib/subscriptions.ts` — create と listAll の2関数だけ (全クエリ user_id 必須)
+- [x] 1.7 `src/app/actions.ts` — createSubscription のみ (zod なし、手書き検証)
+- [x] 1.8 `src/app/dashboard/page.tsx` — 素の `<ul>` 一覧 + ページ直置きの素HTML `<form>`
+- [x] 1.9 `pnpm tsc --noEmit` と `pnpm lint` が通る
+- [x] 1.10 目視確認: `pnpm dev` で 1件追加 → カード表示。OK ならコミット
 
 ### 第2周: CRUD完成 = 勝利ライン (v1完成)
 
 ゴール: 追加・編集・削除すべてが動く。ここを越えたら v1完成。
 
-- [ ] 2.1 `subscriptions.ts` に getOne / update / remove を追加 (id + user_id 両方を条件)
-- [ ] 2.2 zod をインストール (`pnpm add zod` を提示)
-- [ ] 2.3 `actions.ts` に update / remove を追加、3アクションを zod 検証に置き換え
-- [ ] 2.4 フォームを追加 / 編集 共用に拡張 (subscription prop で出し分け)
-- [ ] 2.5 編集モードに削除ボタンを追加
-- [ ] 2.6 カードクリックで編集フォームが出る出し分け (モーダルなし、同ページ)
-- [ ] 2.7 `pnpm tsc --noEmit` と `pnpm lint` が通る
+- [x] 2.1 `subscriptions.ts` に getOne / update / remove を追加 (id + user_id 両方を条件)
+- [x] 2.2 zod をインストール (`pnpm add zod` を提示)
+- [x] 2.3 `actions.ts` に update / remove を追加、3アクションを zod 検証に置き換え
+- [x] 2.4 フォームを追加 / 編集 共用に拡張 (subscription prop で出し分け)
+- [x] 2.5 編集モードに削除ボタンを追加
+- [x] 2.6 カードクリックで編集フォームが出る出し分け (モーダルなし、同ページ)
+- [x] 2.7 `pnpm tsc --noEmit` と `pnpm lint` が通る
 - [ ] 2.8 目視確認 = 勝利ライン: 追加 → 編集 → 削除 を一通り実行。コミット → v1完成
 
 ### 第3周: 装飾 (諦めても v1 は壊れない / 各項目ごとにコミット)

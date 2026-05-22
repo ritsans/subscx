@@ -3,16 +3,17 @@
 自分用のサブスク管理アプリ。
 
 ## 現状
-第1周 (walking skeleton) 完了。フォーム送信 → DB保存 → 一覧表示の最小サイクルが動作する状態。
+第2周 (CRUD完成) 完了。追加・編集・削除がすべて動く。目視確認待ち。
 
 ## 次やること
-- [ ] 第2周: CRUD完成 (getOne / update / remove + zod + 編集UI)
-~~- [ ] Google OAuth追加（後回し）~~
+- [ ] 2.8 目視確認: 追加→編集→削除を一通り実行 → コミット (v1完成)
+- [ ] 第3周: 装飾 (shadcn/ui, 月額合計, カテゴリ絞り込み)
 
 ## 詰まってる / 保留
 
 
 ## やったこと (新しい順)
+- 2026-05-22: 第2周実装完了。getOne/update/remove + zod v4 + SubscriptionForm + searchParams inline edit UI
 - 2026-05-21: 第1周完了。types / schema / db / subscriptions / actions / dashboard を実装。フォーム→DB保存→一覧表示の動作確認済み
 - 2026-05-20: login / signup / logout の動作確認完了（実アカウント作成で検証済み）
 - 2026-05-20: 認証フロー UI 実装完了。`/login` (タブ切替フォーム)・`/dashboard`・`/mypage`・proxy による保護を追加
