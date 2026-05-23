@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef } from 'react';
 import { createSubscriptionAction, updateSubscriptionAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -48,6 +48,9 @@ export function ServiceModal({ state, onClose }: Props) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{isEdit ? 'サービスを編集' : 'サービスを追加'}</DialogTitle>
+          <DialogDescription>
+            {isEdit ? 'サブスクリプションの内容を更新します。' : '新しいサブスクリプションを登録します。'}
+          </DialogDescription>
         </DialogHeader>
 
         <form ref={formRef} action={formAction} className="flex flex-col gap-4">
