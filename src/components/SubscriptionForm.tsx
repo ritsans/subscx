@@ -1,8 +1,8 @@
 'use client';
 
 import { createSubscriptionAction, removeSubscriptionAction, updateSubscriptionAction } from '@/app/actions';
-import { CATEGORIES } from '@/lib/types';
 import type { Subscription } from '@/lib/types';
+import { CATEGORIES } from '@/lib/types';
 
 type Props = {
   subscription?: Subscription;
