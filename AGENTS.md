@@ -12,3 +12,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Type Check: `pnpm tsc --noEmit`
 
 * コードレビューをする前には、Lintを実行して静的エラーチェックを先に解決させておく。
+
+## UI Policy
+
+- ダークモードは非対応。`dark:` クラス、`.dark` セレクタ、`prefers-color-scheme`、テーマ切替用 Provider、`next-themes` などのダークモード関連コードは追加しない。
+- 配色はライトテーマ固定で実装し、必要な色変更はライトテーマの CSS 変数または Tailwind クラスだけで行う。

@@ -11,6 +11,8 @@ UIの見た目を変えたいとき、どのファイルを編集すればよい
 | HTMLメタ情報 (title / description) | `src/app/layout.tsx` |
 | カテゴリの色 (AI / エンタメ / 仕事 / 音楽 / 買い物) | `src/lib/types.ts` の `CATEGORY_COLORS` |
 
+ダークモードは非対応。`dark:` クラス、`.dark` セレクタ、`prefers-color-scheme`、テーマ切替用 Provider、`next-themes` などのダークモード関連コードは追加しない。
+
 ## ページ単位
 
 | ページ | URL | エントリファイル |
@@ -35,7 +37,8 @@ UIの見た目を変えたいとき、どのファイルを編集すればよい
 
 | 修正したいもの | ファイル |
 |---|---|
-| 上部ナビゲーション (subscx ロゴ / メニュー / ユーザーアバター) | `src/components/dashboard/AppHeader.tsx` |
+| 上部ナビゲーション (subscx ロゴ / メニュー / ユーザーアバター) | `src/components/layout/Header.tsx` |
+| フッター (コピーライト / 補助リンク) | `src/components/layout/Footer.tsx` |
 | ページ全体の構造 (見出し・配置順) | `src/app/dashboard/page.tsx` |
 
 ### サマリーカード (上段の3つのカード)

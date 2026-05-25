@@ -4,7 +4,7 @@ type Props = {
   userName: string;
 };
 
-export function AppHeader({ userName }: Props) {
+export function Header({ userName }: Props) {
   const initials = userName.slice(0, 2).toUpperCase();
 
   return (

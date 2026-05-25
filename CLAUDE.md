@@ -64,11 +64,14 @@ Your goal is to implement the requirements safely and report the changes concise
 - `src/components/` — UI Components
 - `src/lib/` — Utils / Hooks。主要ファイル: `auth.ts` (Better Auth server), `auth-client.ts` (client), `db.ts` (Drizzle + libsql), `schema.ts` / `auth-schema.ts` (テーブル定義), `env.ts` (server-only), `get-session.ts`, `subscriptions.ts`
 
-## Components
+## Components / UI
 
 - 原則 **Server Components**。インタラクティブ性が必要な最末端のみ `use client` を付与。
 - UI 部品は **shadcn/ui** を採用 (設定: `components.json` / style: `radix-luma` / icon: `lucide`)。
   - 新規部品は独自実装する前に `pnpm dlx shadcn@latest add <component>` で追加できないかを検討する。
+- ダークモードは非対応。
+  - `dark:` クラス、`.dark` セレクタ、`prefers-color-scheme`、テーマ切替Provider、`next-themes` などのダークモード関連コードは追加しない。
+  - 配色は**ライトテーマ固定**で実装し、必要な色変更はライトテーマの CSS 変数または Tailwind クラスだけで行う。
 
 ## Security
 
@@ -79,6 +82,7 @@ Access to sensitive files such as `.env.local` is prohibited. Do not perform any
 - 外部ライブラリは、必要なものが不足・見つからない場合にのみインストールを提案する。`pnpm add` 等の実行はユーザーに
 委ね、自分では実行しない。
 - プラン提示後、ユーザーが明示的に **「実装して」** と言うまでコードを書き始めない。
+- 
 - Read existing files before writing. Don't re-read unless changed.
 - Thorough in reasoning, concise in output.
 - Skip files over 100KB unless required.

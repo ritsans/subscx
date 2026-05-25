@@ -40,7 +40,7 @@
 ```
 src/app/dashboard/page.tsx        サーバー: セッション確認・データ取得・集計
 src/components/dashboard/
-  AppHeader.tsx                   サーバー: ロゴ・ナビ(ダミー)・通知・アバター
+  Header.tsx                   サーバー: ロゴ・ナビ(ダミー)・通知・アバター
   SummaryCards.tsx                サーバー: 上部3カード(合計/年額/件数)
   ServiceGrid.tsx                 client: カテゴリ絞り込み + カードグリッド
   ServiceCard.tsx                 client: 個別カード + 「···」メニュー

@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
-import { AppHeader } from '@/components/dashboard/AppHeader';
 import { ServiceGrid } from '@/components/dashboard/ServiceGrid';
 import { SummaryCards } from '@/components/dashboard/SummaryCards';
+import { Footer } from '@/components/layout/Footer';
+import { Header } from '@/components/layout/Header';
 import { getSession } from '@/lib/get-session';
 import { listAll } from '@/lib/subscriptions';
 
@@ -18,13 +19,15 @@ export default async function DashboardPage() {
   const aiCount = subs.filter((s) => s.category === 'AI').length;
 
   return (
-    <div className="min-h-screen bg-[#f7f5f2]">
-      <AppHeader userName={session.user.name ?? session.user.email} />
+    <div className="flex min-h-screen flex-col bg-[#f7f5f2]">
+      <Header userName={session.user.name ?? session.user.email} />
 
-      <main className="mx-auto flex max-w-5xl flex-col gap-8 px-6 py-8">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-8">
         <SummaryCards monthlyTotal={monthlyTotal} yearlyTotal={yearlyTotal} count={subs.length} aiCount={aiCount} />
         <ServiceGrid subs={subs} />
       </main>
+
+      <Footer />
     </div>
   );
 }

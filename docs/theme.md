@@ -35,7 +35,8 @@ stone ベーステーマ。oklch 色空間で定義。
 | `--ring` | `oklch(0.709 0.01 56.259)` | フォーカスリング |
 | `--destructive` | `oklch(0.577 0.245 27.325)` | 削除・エラー色 |
 
-ダークモード変数は現時点で未定義 (ライトのみ運用)。
+ダークモードは非対応。`dark:` クラス、`.dark` セレクタ、`prefers-color-scheme`、テーマ切替用 Provider、`next-themes` などのダークモード関連コードは追加しない。
+配色はライトテーマ固定で運用し、必要な色変更はライトテーマの CSS 変数または Tailwind クラスだけで行う。
 
 ## カードシステム
 
@@ -118,7 +119,6 @@ border-b border-stone-200/60
 ## 今後のカスタマイズポイント
 
 - **テーマ色変更**: `globals.css` の `--primary` を差し替えると shadcn コンポーネント全体に反映
-- **アクセント変更**: `violet-600` を grep して一括置換 (`AppHeader`, `SummaryCards`, `AddServiceButton`, `ServiceGrid`)
+- **アクセント変更**: `violet-600` を grep して一括置換 (`Header`, `SummaryCards`, `AddServiceButton`, `ServiceGrid`)
 - **カテゴリ追加**: `src/lib/types.ts` の `CATEGORIES` と `CATEGORY_COLORS` に追記
-- **背景色変更**: `#f7f5f2` を grep して一括置換 (`globals.css` は不要、`page.tsx` と `AppHeader.tsx` のみ)
-- **ダークモード対応**: `globals.css` に `.dark { }` ブロックで変数を上書き、`AppHeader` のベージュ背景を変数化する
+- **背景色変更**: `#f7f5f2` を grep して一括置換 (`globals.css` は不要、`page.tsx` と `Header.tsx` のみ)
