@@ -2,39 +2,15 @@
 
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
+import { initialAuthFormState, signupAction } from '@/app/auth-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { authClient } from '@/lib/auth-client';
 
 export function SignupForm() {
-  const router = useRouter();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [pending, setPending] = useState(false);
-
-  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError('');
-    setPending(true);
-
-    try {
-      const { error: err } = await authClient.signUp.email({ name, email, password });
-      if (err) {
-        setError(err.message ?? '登録に失敗しました');
-        return;
-      }
-      router.refresh();
-      router.push('/dashboard');
-    } finally {
-      setPending(false);
-    }
-  }
+  const [state, formAction, pending] = useActionState(signupAction, initialAuthFormState);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white px-6 py-12">
@@ -45,16 +21,15 @@ export function SignupForm() {
           <p className="text-sm text-stone-500">アカウントを作成してはじめましょう</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form action={formAction} className="space-y-4">
           {/* 名前 */}
           <div className="space-y-1.5">
             <Label htmlFor="name">名前</Label>
             <Input
               id="name"
+              name="name"
               type="text"
               placeholder="山田 ゆき"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               required
               autoComplete="name"
               className="rounded-lg"
@@ -66,10 +41,9 @@ export function SignupForm() {
             <Label htmlFor="email">メールアドレス</Label>
             <Input
               id="email"
+              name="email"
               type="email"
               placeholder="yuki@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
               className="rounded-lg"
@@ -82,9 +56,8 @@ export function SignupForm() {
             <div className="relative">
               <Input
                 id="password"
+                name="password"
                 type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="new-password"
                 className="rounded-lg pr-14"
@@ -101,9 +74,9 @@ export function SignupForm() {
           </div>
 
           {/* エラー */}
-          {error && (
+          {state.error && (
             <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
-              {error}
+              {state.error}
             </p>
           )}
 

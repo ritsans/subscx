@@ -2,43 +2,15 @@
 
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
+import { initialAuthFormState, loginAction } from '@/app/auth-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { authClient } from '@/lib/auth-client';
 
 export function LoginForm() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
-  const [error, setError] = useState('');
-  const [pending, setPending] = useState(false);
-
-  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError('');
-    setPending(true);
-
-    try {
-      const { error: err } = await authClient.signIn.email({
-        email,
-        password,
-        rememberMe,
-      });
-      if (err) {
-        setError(err.message ?? 'ログインに失敗しました');
-        return;
-      }
-      router.refresh();
-      router.push('/dashboard');
-    } finally {
-      setPending(false);
-    }
-  }
+  const [state, formAction, pending] = useActionState(loginAction, initialAuthFormState);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white px-6 py-12">
@@ -49,16 +21,15 @@ export function LoginForm() {
           <p className="text-sm text-stone-500">続けるにはアカウントにサインインしてください</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form action={formAction} className="space-y-4">
           {/* メールアドレス */}
           <div className="space-y-1.5">
             <Label htmlFor="email">メールアドレス</Label>
             <Input
               id="email"
+              name="email"
               type="email"
               placeholder="yuki@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
               className="rounded-lg"
@@ -71,9 +42,8 @@ export function LoginForm() {
             <div className="relative">
               <Input
                 id="password"
+                name="password"
                 type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
                 className="rounded-lg pr-14"
@@ -92,12 +62,7 @@ export function LoginForm() {
           {/* ログイン状態を保持 / パスワードを忘れた */}
           <div className="flex items-center justify-between">
             <label className="flex cursor-pointer items-center gap-2">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="size-4 accent-violet-600"
-              />
+              <input type="checkbox" name="rememberMe" defaultChecked className="size-4 accent-violet-600" />
               <span className="text-sm text-stone-600">ログイン状態を保持</span>
             </label>
             <button type="button" disabled className="text-sm text-violet-600 opacity-60 cursor-not-allowed">
@@ -106,9 +71,9 @@ export function LoginForm() {
           </div>
 
           {/* エラー */}
-          {error && (
+          {state.error && (
             <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
-              {error}
+              {state.error}
             </p>
           )}
 
