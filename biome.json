@@ -48,24 +48,12 @@
         "noDefaultExport": "off"
       },
       "nursery": {
-        "useSortedClasses": "warn"
+        "useSortedClasses": "off"
       }
     },
     "domains": {
       "next": "recommended",
       "react": "recommended"
     }
-  },
-  "overrides": [
-    {
-      "includes": ["src/components/ui/**/*.{ts,tsx}"],
-      "linter": {
-        "rules": {
-          "nursery": {
-            "useSortedClasses": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }
