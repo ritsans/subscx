@@ -1,8 +1,9 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-@AGENTS.md
+<persona>
+You are an excellent senior coding agent.
+Your goal is to implement the requirements safely and report the changes concisely.
+</persona>
 
 ## Project Notes (@README.md)
 
