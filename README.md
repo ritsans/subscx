@@ -3,16 +3,22 @@
 自分用のサブスク管理アプリ。
 
 ## 現状
-認証フロー 実装完了。ログイン/新規登録・ダッシュボード・マイページ・ルーティング保護が動作する状態。
+認証画面 UI 刷新完了。`/login` と `/signup` が同一2カラムレイアウトで実装済み。
+共通ヘッダー/フッターは `src/components/layout/` に集約。UI はライトテーマ固定で、ダークモードは非対応。
 
 ## 次やること
-- [ ] UIの実装
-~~- [ ] Google OAuth追加（後回し）~~
+エラーチェック・解消したらブランチをマージして新ブランチ「機能追加・効率化」のフェイズに移行する
 
 ## 詰まってる / 保留
-- [ ] 本番envファイルのコピー
+
 
 ## やったこと (新しい順)
+- 2026-05-25: 共通レイアウト整理。`Header` / `Footer` を `src/components/layout/` に配置し、ダッシュボードへ組み込み。ダークモード非対応方針を `AGENTS.md` / `docs/theme.md` / `src/components/guide.md` に明文化
+- 2026-05-22: 新規登録画面 `/signup` 追加、旧 `auth-form.tsx` 削除
+- 2026-05-22: ログイン画面 UI 刷新。デザインカンプ基づき2カラムレイアウト (BrandPanel + LoginForm)、rememberMe・パスワード表示トグル実装
+- 2026-05-22: 第3周完了。shadcn/ui導入、ダッシュボードUI全面刷新 (カードグリッド・モーダルCRUD・カテゴリ絞り込み・サマリー3カード)。テーマ設定を `docs/theme.md` に文書化
+- 2026-05-22: 第2周実装完了。getOne/update/remove + zod v4 + SubscriptionForm + searchParams inline edit UI
+- 2026-05-21: 第1周完了。types / schema / db / subscriptions / actions / dashboard を実装。フォーム→DB保存→一覧表示の動作確認済み
 - 2026-05-20: login / signup / logout の動作確認完了（実アカウント作成で検証済み）
 - 2026-05-20: 認証フロー UI 実装完了。`/login` (タブ切替フォーム)・`/dashboard`・`/mypage`・proxy による保護を追加
 - 2026-05-19: Better Auth + Turso (libSQL) セットアップ完了。`/api/auth/get-session` 動作確認済み

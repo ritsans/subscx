@@ -1,24 +1,33 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import SignOutButton from '@/components/sign-out-button';
+import { ServiceGrid } from '@/components/dashboard/ServiceGrid';
+import { SummaryCards } from '@/components/dashboard/SummaryCards';
+import { Footer } from '@/components/layout/Footer';
+import { Header } from '@/components/layout/Header';
 import { getSession } from '@/lib/get-session';
+import { listAll } from '@/lib/subscriptions';
 
 export default async function DashboardPage() {
   const session = await getSession();
   if (!session) redirect('/login');
 
-  const { user } = session;
+  const subs = await listAll(session.user.id);
+
+  const monthlyTotal = Math.floor(
+    subs.reduce((acc, s) => acc + (s.billingCycle === 'monthly' ? s.price : s.price / 12), 0),
+  );
+  const yearlyTotal = subs.reduce((acc, s) => acc + (s.billingCycle === 'yearly' ? s.price : s.price * 12), 0);
+  const aiCount = subs.filter((s) => s.category === 'AI').length;
 
   return (
-    <main style={{ maxWidth: 600, margin: '80px auto', padding: '0 16px' }}>
-      <h1>ダッシュボード</h1>
-      <p>ようこそ、{user.name} さん</p>
-      <p style={{ color: '#666', fontSize: 14 }}>{user.email}</p>
+    <div className="flex min-h-screen flex-col bg-[#f7f5f2]">
+      <Header userName={session.user.name ?? session.user.email} />
 
-      <nav style={{ display: 'flex', gap: 12, marginTop: 32 }}>
-        <Link href="/mypage">マイページ</Link>
-        <SignOutButton />
-      </nav>
-    </main>
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-8">
+        <SummaryCards monthlyTotal={monthlyTotal} yearlyTotal={yearlyTotal} count={subs.length} aiCount={aiCount} />
+        <ServiceGrid subs={subs} />
+      </main>
+
+      <Footer />
+    </div>
   );
 }

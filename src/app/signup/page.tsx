@@ -1,11 +1,11 @@
 import { BrandPanel } from '@/components/auth/BrandPanel';
-import { LoginForm } from '@/components/auth/LoginForm';
+import { SignupForm } from '@/components/auth/SignupForm';
 
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <BrandPanel />
-      <LoginForm />
+      <SignupForm />
     </div>
   );
 }

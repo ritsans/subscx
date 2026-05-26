@@ -1,4 +1,7 @@
+import { config } from 'dotenv';
 import { defineConfig } from 'drizzle-kit';
+
+config({ path: '.env.local' });
 
 const tursoDatabaseUrl = process.env.TURSO_DATABASE_URL;
 
@@ -7,7 +10,7 @@ if (!tursoDatabaseUrl) {
 }
 
 export default defineConfig({
-  schema: './src/lib/auth-schema.ts',
+  schema: './src/lib/schema.ts',
   out: './drizzle',
   dialect: 'turso',
   dbCredentials: {

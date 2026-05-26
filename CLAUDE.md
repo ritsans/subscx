@@ -1,8 +1,9 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-@AGENTS.md
+<persona>
+You are an excellent senior coding agent.
+Your goal is to implement the requirements safely and report the changes concisely.
+</persona>
 
 ## Project Notes (@README.md)
 
@@ -13,20 +14,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `## 詰まってる / 保留`: ブロッカーや判断保留事項
   - `## やったこと (新しい順)`: 完了した作業を日付付きで追記 (最新を上に)
 
+プラン参照:
+- 設計書  `docs/spec.md`
+- 設計計画書  `docs/plan.md`
+
+終了したタスクはチェックを入れること `e.g: [ ]  -> [x]`
+ 
 ## Commands
 
 - Development: `pnpm dev`
 - Build: `pnpm build`
 - Lint: `pnpm lint`
+- Lint autofix: `pnpm lint --write ./src`
 - Type Check: `pnpm tsc --noEmit`
 - DB Schema Push: `pnpm drizzle-kit push`
 - DB Generate Migration: `pnpm drizzle-kit generate`
 
-## Environment Variables (Required)
+## Environment Variables
 
-- `TURSO_DATABASE_URL` — Turso DB の接続 URL
+必須:
+- `TURSO_DATABASE_URL` — Turso DB 接続 URL
 - `TURSO_AUTH_TOKEN` — Turso 認証トークン
 - `BETTER_AUTH_SECRET` — Better Auth セッション署名用シークレット
+
+ルール:
+- `process.env` を直接参照しない。必ず `src/lib/env.ts` の `env` オブジェクト経由。
+- `src/lib/env.ts` は `import 'server-only'` 付きのサーバー専用。Client component から import 不可。
+- 新規変数追加時は `env.ts` に追記し、必須/任意を明示する。
 
 ## Stack
 
@@ -38,31 +52,37 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Code Style
 
 - single quote, semicolons on, indent 2 spaces, lineWidth 120
-- JSX attributes use double quote
-- imports auto-sorted (biome assist)
+- JSX attributes は **double quote** 優先
+- trailing comma: all、arrow function は常に括弧付き (`(x) => ...`)
+- Tailwind クラスは `useSortedClasses` で自動ソート (warn)
+- フォーマット/import 整列は `pnpm format` または `pnpm lint` に任せる
 
 ## Architecture
 
-### Architecture & Files
+ディレクトリ構造を厳守。
+- `src/app/` — Pages / APIs / Server Actions (`actions.ts`)
+- `src/components/` — UI Components
+- `src/lib/` — Utils / Hooks。主要ファイル: `auth.ts` (Better Auth server), `auth-client.ts` (client), `db.ts` (Drizzle + libsql), `schema.ts` / `auth-schema.ts` (テーブル定義), `env.ts` (server-only), `get-session.ts`, `subscriptions.ts`
 
-- 以下のディレクトリ構造を厳守し、新しいディレクトリを増やす前に必ず人間に確認すること。
-  `src/app/` (Pages/APIs), `src/components/` (UI Components), `src/lib/` (Utils/Hooks)
-- コンポーネントは原則 `Server Components`（デフォルト）とし、インタラクティブ性が必要な場合のみ最末端で `use client` を付与する。
-- 勝手に新規の外部ライブラリを追加することは禁止（まずは標準APIや既存の仕組みで代替案を提案すること）。
-- You tend to start writing and implementing code immediately after outlining a plan. During the planning phase, do not write any code until I explicitly say **"実装して**
+## Components / UI
 
-## Environment Variables
+- 原則 **Server Components**。インタラクティブ性が必要な最末端のみ `use client` を付与。
+- UI 部品は **shadcn/ui** を採用 (設定: `components.json` / style: `radix-luma` / icon: `lucide`)。
+  - 新規部品は独自実装する前に `pnpm dlx shadcn@latest add <component>` で追加できないかを検討する。
+- ダークモードは非対応。
+  - `dark:` クラス、`.dark` セレクタ、`prefers-color-scheme`、テーマ切替Provider、`next-themes` などのダークモード関連コードは追加しない。
+  - 配色は**ライトテーマ固定**で実装し、必要な色変更はライトテーマの CSS 変数または Tailwind クラスだけで行う。
 
-- `process.env` を直接参照しないこと。必ず `src/lib/env.ts` の `env` オブジェクトを経由する。
-- `src/lib/env.ts` は `import 'server-only'` を持つサーバー専用モジュール。クライアントコンポーネントから import するとエラーになる。
-- 新しい環境変数を追加する際は `env.ts` のオブジェクトに追記し、必須/任意を明示すること。
-
-## Secure 
+## Security
 
 Access to sensitive files such as `.env.local` is prohibited. Do not perform any READ operations on these files. If interaction is required, instruct the user to perform the necessary steps manually.
 
 ## Approach
 
+- 外部ライブラリは、必要なものが不足・見つからない場合にのみインストールを提案する。`pnpm add` 等の実行はユーザーに
+委ね、自分では実行しない。
+- プラン提示後、ユーザーが明示的に **「実装して」** と言うまでコードを書き始めない。
+- 
 - Read existing files before writing. Don't re-read unless changed.
 - Thorough in reasoning, concise in output.
 - Skip files over 100KB unless required.

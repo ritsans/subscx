@@ -48,7 +48,7 @@
         "noDefaultExport": "off"
       },
       "nursery": {
-        "useSortedClasses": "warn"
+        "useSortedClasses": "off"
       }
     },
     "domains": {
