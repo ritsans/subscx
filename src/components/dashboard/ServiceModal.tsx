@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useRef } from 'react';
+import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
 import { createSubscriptionAction, updateSubscriptionAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -17,10 +17,43 @@ type Props = {
   onClose: () => void;
 };
 
+function daysInMonth(year: number, month: number): number {
+  return new Date(year, month, 0).getDate();
+}
+
+function inferYear(month: number, day: number): number {
+  const today = new Date();
+  const thisYear = today.getFullYear();
+  const todayMd = today.getMonth() * 100 + today.getDate();
+  const candidateMd = (month - 1) * 100 + day;
+  return candidateMd >= todayMd ? thisYear : thisYear + 1;
+}
+
+function anchorFromParts(month: number, day: number): string {
+  const year = inferYear(month, day);
+  const clampedDay = Math.min(day, daysInMonth(year, month));
+  return `${year}-${String(month).padStart(2, '0')}-${String(clampedDay).padStart(2, '0')}`;
+}
+
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+
 export function ServiceModal({ state, onClose }: Props) {
   const isOpen = state !== null;
   const isEdit = state?.mode === 'edit';
   const sub = isEdit ? state.sub : undefined;
+
+  const defaultMonth = sub ? Number(sub.nextBillingDate.split('-')[1]) : new Date().getMonth() + 1;
+  const defaultDay = sub ? Number(sub.nextBillingDate.split('-')[2]) : new Date().getDate();
+
+  const [month, setMonth] = useState(defaultMonth);
+  const [day, setDay] = useState(defaultDay);
+
+  const year = inferYear(month, day);
+  const maxDay = daysInMonth(year, month);
+  const clampedDay = Math.min(day, maxDay);
+  const days = Array.from({ length: maxDay }, (_, i) => i + 1);
+
+  const anchorDate = useMemo(() => anchorFromParts(month, day), [month, day]);
 
   const action = isEdit ? updateSubscriptionAction : createSubscriptionAction;
   const [, formAction, isPending] = useActionState(async (_prev: null, formData: FormData) => {
@@ -31,12 +64,15 @@ export function ServiceModal({ state, onClose }: Props) {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  // モーダルが開くたびにフォームをリセット
   useEffect(() => {
     if (isOpen) {
+      const m = sub ? Number(sub.nextBillingDate.split('-')[1]) : new Date().getMonth() + 1;
+      const d = sub ? Number(sub.nextBillingDate.split('-')[2]) : new Date().getDate();
+      setMonth(m);
+      setDay(d);
       formRef.current?.reset();
     }
-  }, [isOpen]);
+  }, [isOpen, sub]);
 
   return (
     <Dialog
@@ -105,14 +141,34 @@ export function ServiceModal({ state, onClose }: Props) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="nextBillingDate">次回請求日</Label>
-            <Input
-              id="nextBillingDate"
-              name="nextBillingDate"
-              type="date"
-              defaultValue={sub?.nextBillingDate ?? ''}
-              required
-            />
+            <Label>請求日 (月/日)</Label>
+            <input type="hidden" name="nextBillingDate" value={anchorDate} />
+            <div className="flex gap-2">
+              <Select value={String(month)} onValueChange={(v) => setMonth(Number(v))}>
+                <SelectTrigger className="flex-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {MONTHS.map((m) => (
+                    <SelectItem key={m} value={String(m)}>
+                      {m}月
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={String(clampedDay)} onValueChange={(v) => setDay(Number(v))}>
+                <SelectTrigger className="flex-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {days.map((d) => (
+                    <SelectItem key={d} value={String(d)}>
+                      {d}日
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="flex flex-col gap-1.5">

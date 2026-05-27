@@ -32,9 +32,8 @@ export function ServiceCard({ sub, today, onEdit, onDelete }: Props) {
 
   return (
     <div className="group relative rounded-2xl border border-stone-100 bg-white p-5 shadow-sm transition-all duration-200 hover:border-stone-200 hover:shadow-md">
-      {/* 右上: バッジ + メニュー */}
-      <div className="absolute top-4 right-4 flex items-center gap-1.5">
-        <NextBillingBadge daysUntil={daysUntil} />
+      {/* 右上: メニュー */}
+      <div className="absolute top-4 right-4">
         <DropdownMenu>
           <DropdownMenuTrigger
             className="flex h-7 w-7 items-center justify-center rounded-full text-stone-300 opacity-0 transition-all duration-150 hover:bg-stone-100 hover:text-stone-600 group-hover:opacity-100"
@@ -69,9 +68,12 @@ export function ServiceCard({ sub, today, onEdit, onDelete }: Props) {
         </p>
       </div>
 
-      {/* フッター: 次回 + カテゴリバッジ */}
+      {/* フッター: 次回 + バッジ + カテゴリ */}
       <div className="flex items-center justify-between">
-        <p className="text-[11px] text-stone-400">次回 {formatMmDd(nextDate)}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-[11px] text-stone-400">次回 {formatMmDd(nextDate)}</p>
+          <NextBillingBadge daysUntil={daysUntil} />
+        </div>
         <span className={`rounded-full px-2.5 py-1 font-medium text-xs ${colors.bg} ${colors.text}`}>
           {sub.category}
         </span>
