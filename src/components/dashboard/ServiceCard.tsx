@@ -19,9 +19,9 @@ type Props = {
   onDelete: (id: string) => void;
 };
 
-function formatMmDd(ymd: string): string {
-  const [, month, day] = ymd.split('-').map(Number);
-  return `${month}/${day}`;
+function formatNextDate(ymd: string, includeYear: boolean): string {
+  const [year, month, day] = ymd.split('-').map(Number);
+  return includeYear ? `${year}/${month}/${day}` : `${month}/${day}`;
 }
 
 export function ServiceCard({ sub, today, onEdit, onDelete }: Props) {
@@ -71,7 +71,7 @@ export function ServiceCard({ sub, today, onEdit, onDelete }: Props) {
       {/* フッター: 次回 + バッジ + カテゴリ */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <p className="text-[11px] text-stone-400">次回 {formatMmDd(nextDate)}</p>
+          <p className="text-[11px] text-stone-400">次回 {formatNextDate(nextDate, sub.billingCycle === 'yearly')}</p>
           <NextBillingBadge daysUntil={daysUntil} />
         </div>
         <span className={`rounded-full px-2.5 py-1 font-medium text-xs ${colors.bg} ${colors.text}`}>
