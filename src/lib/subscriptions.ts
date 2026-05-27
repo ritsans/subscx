@@ -1,5 +1,5 @@
 import 'server-only';
-import { and, asc, eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { db } from './db';
 import { subscriptions } from './schema';
 import type { BillingCycle, Category, Subscription } from './types';
@@ -29,12 +29,7 @@ export async function createSubscription(data: {
 }
 
 export async function listAll(userId: string): Promise<Subscription[]> {
-  const rows = await db
-    .select()
-    .from(subscriptions)
-    .where(eq(subscriptions.userId, userId))
-    .orderBy(asc(subscriptions.nextBillingDate));
-
+  const rows = await db.select().from(subscriptions).where(eq(subscriptions.userId, userId));
   return rows as Subscription[];
 }
 
