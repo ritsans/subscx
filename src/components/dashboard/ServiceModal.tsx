@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { formatYmdInAppTimeZone } from '@/lib/billing';
 import type { Subscription } from '@/lib/types';
 import { CATEGORIES } from '@/lib/types';
 
@@ -21,10 +22,15 @@ function daysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }
 
+function appTodayParts(): { year: number; month: number; day: number } {
+  const [year, month, day] = formatYmdInAppTimeZone(new Date()).split('-').map(Number);
+  return { year, month, day };
+}
+
 function inferYear(month: number, day: number): number {
-  const today = new Date();
-  const thisYear = today.getFullYear();
-  const todayMd = today.getMonth() * 100 + today.getDate();
+  const today = appTodayParts();
+  const thisYear = today.year;
+  const todayMd = (today.month - 1) * 100 + today.day;
   const candidateMd = (month - 1) * 100 + day;
   return candidateMd >= todayMd ? thisYear : thisYear + 1;
 }
@@ -41,9 +47,10 @@ export function ServiceModal({ state, onClose }: Props) {
   const isOpen = state !== null;
   const isEdit = state?.mode === 'edit';
   const sub = isEdit ? state.sub : undefined;
+  const today = appTodayParts();
 
-  const defaultMonth = sub ? Number(sub.nextBillingDate.split('-')[1]) : new Date().getMonth() + 1;
-  const defaultDay = sub ? Number(sub.nextBillingDate.split('-')[2]) : new Date().getDate();
+  const defaultMonth = sub ? Number(sub.nextBillingDate.split('-')[1]) : today.month;
+  const defaultDay = sub ? Number(sub.nextBillingDate.split('-')[2]) : today.day;
 
   const [month, setMonth] = useState(defaultMonth);
   const [day, setDay] = useState(defaultDay);
@@ -66,8 +73,9 @@ export function ServiceModal({ state, onClose }: Props) {
 
   useEffect(() => {
     if (isOpen) {
-      const m = sub ? Number(sub.nextBillingDate.split('-')[1]) : new Date().getMonth() + 1;
-      const d = sub ? Number(sub.nextBillingDate.split('-')[2]) : new Date().getDate();
+      const currentToday = appTodayParts();
+      const m = sub ? Number(sub.nextBillingDate.split('-')[1]) : currentToday.month;
+      const d = sub ? Number(sub.nextBillingDate.split('-')[2]) : currentToday.day;
       setMonth(m);
       setDay(d);
       formRef.current?.reset();

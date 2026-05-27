@@ -1,4 +1,12 @@
 {
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true",
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
+    "CLAUDE_ENABLE_STREAM_WATCHDOG": "1",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "80",
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "MAX_THINKING_TOKENS": "0"
+  },
   "permissions": {
     "allow": [
       "Bash(git:*)",
@@ -40,12 +48,7 @@
       }
     ]
   },
-  "env": {
-    "ENABLE_TOOL_SEARCH": true,
-    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
-    "CLAUDE_ENABLE_STREAM_WATCHDOG": "1",
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "80",
-    "CLAUDE_CODE_NO_FLICKER": "1",
-    "MAX_THINKING_TOKENS": "0"
+  "enabledPlugins": {
+    "security-guidance@claude-plugins-official": true
   }
 }

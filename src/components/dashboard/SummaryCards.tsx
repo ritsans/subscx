@@ -2,10 +2,9 @@ type Props = {
   monthlyTotal: number;
   yearlyTotal: number;
   count: number;
-  aiCount: number;
 };
 
-export function SummaryCards({ monthlyTotal, yearlyTotal, count, aiCount }: Props) {
+export function SummaryCards({ monthlyTotal, yearlyTotal, count }: Props) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {/* 今月の合計 */}

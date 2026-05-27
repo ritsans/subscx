@@ -1,5 +1,7 @@
 import type { BillingCycle } from './types';
 
+export const APP_TIME_ZONE = 'Asia/Tokyo';
+
 function parseYmd(ymd: string): Date {
   const [y, m, d] = ymd.split('-').map(Number);
   return new Date(Date.UTC(y, m - 1, d));
@@ -10,6 +12,25 @@ export function formatYmd(date: Date): string {
   const m = String(date.getUTCMonth() + 1).padStart(2, '0');
   const d = String(date.getUTCDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
+}
+
+export function formatYmdInAppTimeZone(date: Date): string {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: APP_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date);
+
+  const year = parts.find((part) => part.type === 'year')?.value;
+  const month = parts.find((part) => part.type === 'month')?.value;
+  const day = parts.find((part) => part.type === 'day')?.value;
+
+  if (!year || !month || !day) {
+    throw new Error('Failed to format date in app time zone');
+  }
+
+  return `${year}-${month}-${day}`;
 }
 
 function lastDayOfMonth(year: number, monthIndex: number): number {

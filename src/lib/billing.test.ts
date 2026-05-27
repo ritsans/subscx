@@ -1,9 +1,26 @@
-import { daysUntilNextBilling, formatYmd, nextBillingFrom, toMonthly, toYearly } from './billing';
+import {
+  daysUntilNextBilling,
+  formatYmd,
+  formatYmdInAppTimeZone,
+  nextBillingFrom,
+  toMonthly,
+  toYearly,
+} from './billing';
 
 describe('formatYmd', () => {
   it('formats UTC date to YYYY-MM-DD with zero padding', () => {
     expect(formatYmd(new Date(Date.UTC(2026, 0, 5)))).toBe('2026-01-05');
     expect(formatYmd(new Date(Date.UTC(2026, 11, 31)))).toBe('2026-12-31');
+  });
+});
+
+describe('formatYmdInAppTimeZone', () => {
+  it('formats dates using Japan time instead of UTC', () => {
+    expect(formatYmdInAppTimeZone(new Date('2026-05-26T23:00:00.000Z'))).toBe('2026-05-27');
+  });
+
+  it('keeps the previous Japan date before midnight', () => {
+    expect(formatYmdInAppTimeZone(new Date('2026-05-26T14:59:59.000Z'))).toBe('2026-05-26');
   });
 });
 

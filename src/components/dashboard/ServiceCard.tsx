@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { daysUntilNextBilling, nextBillingFrom, toMonthly } from '@/lib/billing';
+import { daysUntilNextBilling, nextBillingFrom } from '@/lib/billing';
 import type { Subscription } from '@/lib/types';
 import { CATEGORY_COLORS } from '@/lib/types';
 import { NextBillingBadge } from './NextBillingBadge';
@@ -26,7 +26,6 @@ function formatNextDate(ymd: string, includeYear: boolean): string {
 
 export function ServiceCard({ sub, today, onEdit, onDelete }: Props) {
   const colors = CATEGORY_COLORS[sub.category];
-  const monthly = toMonthly(sub.price, sub.billingCycle);
   const nextDate = nextBillingFrom(sub.nextBillingDate, sub.billingCycle, today);
   const daysUntil = daysUntilNextBilling(sub.nextBillingDate, sub.billingCycle, today);
 
