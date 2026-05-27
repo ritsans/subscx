@@ -3,16 +3,16 @@
 自分用のサブスク管理アプリ。
 
 ## 現状
-認証画面 UI 刷新完了。`/login` と `/signup` が同一2カラムレイアウトで実装済み。
-共通ヘッダー/フッターは `src/components/layout/` に集約。UI はライトテーマ固定で、ダークモードは非対応。
+v1 仕上げパック (警告バッジ / 次回請求日の遅延評価 / 主要サービスのロゴアイコン) 実装完了。`docs/plans/2026-05-26-v1-polish-pack.md` 参照。
 
 ## 次やること
-エラーチェック・解消したらブランチをマージして新ブランチ「機能追加・効率化」のフェイズに移行する
+v2 候補 (グラフ / 年額予想 / CSV / 通知 / PWA) のうち、次に着手するものを選定
 
 ## 詰まってる / 保留
 
 
 ## やったこと (新しい順)
+- 2026-05-27: v1 仕上げパック実装。`src/lib/billing.ts` で次回課金日の遅延評価を導入し、`nextBillingDate` をアンカー日として再解釈。7日以内の警告バッジ (`NextBillingBadge`) と主要サービスのロゴアイコン (`ServiceIcon` + `simple-icons`) を追加。モーダルの日付入力を月/日セレクトに変更。DB スキーマは無変更
 - 2026-05-25: 共通レイアウト整理。`Header` / `Footer` を `src/components/layout/` に配置し、ダッシュボードへ組み込み。ダークモード非対応方針を `AGENTS.md` / `docs/theme.md` / `src/components/guide.md` に明文化
 - 2026-05-22: 新規登録画面 `/signup` 追加、旧 `auth-form.tsx` 削除
 - 2026-05-22: ログイン画面 UI 刷新。デザインカンプ基づき2カラムレイアウト (BrandPanel + LoginForm)、rememberMe・パスワード表示トグル実装
