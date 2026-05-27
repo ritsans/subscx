@@ -57,6 +57,10 @@ Your goal is to implement the requirements safely and report the changes concise
 - Tailwind クラスは `useSortedClasses` で自動ソート (warn)
 - フォーマット/import 整列は `pnpm format` または `pnpm lint` に任せる
 
+## Codebase
+
+codebase全体を確認したい場合は、`temp/repomix-output.md`を参照すること。
+
 ## Architecture
 
 ディレクトリ構造を厳守。
