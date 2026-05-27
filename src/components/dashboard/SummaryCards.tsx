@@ -13,11 +13,10 @@ export function SummaryCards({ monthlyTotal, yearlyTotal, count, aiCount }: Prop
         <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-violet-200/50" />
         <div className="absolute -right-2 top-10 h-16 w-16 rounded-full bg-teal-200/40" />
         <p className="relative mb-3 font-medium text-violet-500 text-xs">今月の合計</p>
-        <p className="relative font-bold text-stone-900 leading-none">
+        <p className="relative font-bold  text-stone-900 leading-none">
           ¥<span className="font-numeric text-4xl">{monthlyTotal.toLocaleString()}</span>
           <span className="ml-1 text-sm font-normal text-stone-500">/ 月</span>
         </p>
-        <p className="relative mt-3 text-violet-400 text-xs">月額換算</p>
       </div>
 
       {/* 年額換算 */}
@@ -26,7 +25,7 @@ export function SummaryCards({ monthlyTotal, yearlyTotal, count, aiCount }: Prop
         <p className="font-bold text-stone-900 leading-none">
           ¥<span className="font-numeric text-3xl">{yearlyTotal.toLocaleString()}</span>
         </p>
-        <p className="mt-3 text-stone-400 text-xs">× 12ヶ月で計算</p>
+        <p className="mt-2 text-stone-400 text-xs">月額×12 + 年額の合計</p>
       </div>
 
       {/* 登録サービス数 */}
@@ -36,7 +35,6 @@ export function SummaryCards({ monthlyTotal, yearlyTotal, count, aiCount }: Prop
           <span className="font-numeric text-3xl">{count}</span>
           <span className="ml-1 font-medium text-base text-stone-400">件</span>
         </p>
-        <p className="mt-3 text-stone-400 text-xs">{aiCount > 0 ? `うちAIが${aiCount}件` : '登録中'}</p>
       </div>
     </div>
   );

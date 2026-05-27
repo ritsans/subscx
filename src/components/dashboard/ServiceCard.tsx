@@ -63,8 +63,10 @@ export function ServiceCard({ sub, today, onEdit, onDelete }: Props) {
       {/* 料金 */}
       <div className="mb-4 text-right">
         <p className="font-bold text-stone-900 text-2xl">
-          ¥<span className="font-numeric">{monthly.toLocaleString()}</span>
-          <span className="ml-1 text-sm font-normal text-stone-400">/ 月</span>
+          ¥<span className="font-numeric">{sub.price.toLocaleString()}</span>
+          <span className="ml-1 text-sm font-normal text-stone-400">
+            {sub.billingCycle === 'yearly' ? '/ 年' : '/ 月'}
+          </span>
         </p>
       </div>
 

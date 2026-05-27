@@ -18,6 +18,53 @@ type Props = {
 const ALL = 'すべて' as const;
 type Filter = typeof ALL | Category;
 
+type SectionedGridProps = {
+  subs: Subscription[];
+  today: string;
+  onEdit: (sub: Subscription) => void;
+  onDelete: (id: string) => void;
+  onAdd: () => void;
+};
+
+function SectionedGrid({ subs, today, onEdit, onDelete, onAdd }: SectionedGridProps) {
+  const monthly = subs.filter((s) => s.billingCycle === 'monthly');
+  const yearly = subs.filter((s) => s.billingCycle === 'yearly');
+
+  return (
+    <div className="flex flex-col gap-6">
+      {monthly.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <span className="font-medium text-stone-400 text-xs">月額払い</span>
+            <div className="h-px flex-1 bg-stone-200" />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+            {monthly.map((sub) => (
+              <ServiceCard key={sub.id} sub={sub} today={today} onEdit={onEdit} onDelete={onDelete} />
+            ))}
+          </div>
+        </div>
+      )}
+      {yearly.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <span className="font-medium text-stone-400 text-xs">年額払い</span>
+            <div className="h-px flex-1 bg-stone-200" />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+            {yearly.map((sub) => (
+              <ServiceCard key={sub.id} sub={sub} today={today} onEdit={onEdit} onDelete={onDelete} />
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <AddServiceButton onClick={onAdd} />
+      </div>
+    </div>
+  );
+}
+
 export function ServiceGrid({ subs, today }: Props) {
   const [filter, setFilter] = useState<Filter>(ALL);
   const [modal, setModal] = useState<ModalState>(null);
@@ -67,13 +114,20 @@ export function ServiceGrid({ subs, today }: Props) {
             最初のサービスを追加する
           </button>
         </div>
-      ) : (
+      ) : filter !== ALL ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           {filtered.map((sub) => (
             <ServiceCard key={sub.id} sub={sub} today={today} onEdit={handleEdit} onDelete={handleDelete} />
           ))}
-          {filter === ALL && <AddServiceButton onClick={() => setModal({ mode: 'add' })} />}
         </div>
+      ) : (
+        <SectionedGrid
+          subs={filtered}
+          today={today}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onAdd={() => setModal({ mode: 'add' })}
+        />
       )}
 
       <ServiceModal state={modal} onClose={() => setModal(null)} />
