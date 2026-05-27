@@ -12,12 +12,13 @@ type ModalState = { mode: 'add' } | { mode: 'edit'; sub: Subscription } | null;
 
 type Props = {
   subs: Subscription[];
+  today: string;
 };
 
 const ALL = 'すべて' as const;
 type Filter = typeof ALL | Category;
 
-export function ServiceGrid({ subs }: Props) {
+export function ServiceGrid({ subs, today }: Props) {
   const [filter, setFilter] = useState<Filter>(ALL);
   const [modal, setModal] = useState<ModalState>(null);
 
@@ -38,7 +39,6 @@ export function ServiceGrid({ subs }: Props) {
 
   return (
     <>
-      {/* カテゴリピル */}
       <div className="flex flex-wrap gap-2">
         {pills.map((pill) => (
           <button
@@ -56,7 +56,6 @@ export function ServiceGrid({ subs }: Props) {
         ))}
       </div>
 
-      {/* カードグリッド */}
       {filtered.length === 0 && filter === ALL ? (
         <div className="col-span-3 flex flex-col items-center gap-3 py-16 text-stone-400">
           <p className="text-sm">まだサービスが登録されていません</p>
@@ -71,7 +70,7 @@ export function ServiceGrid({ subs }: Props) {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           {filtered.map((sub) => (
-            <ServiceCard key={sub.id} sub={sub} onEdit={handleEdit} onDelete={handleDelete} />
+            <ServiceCard key={sub.id} sub={sub} today={today} onEdit={handleEdit} onDelete={handleDelete} />
           ))}
           {filter === ALL && <AddServiceButton onClick={() => setModal({ mode: 'add' })} />}
         </div>
