@@ -18,6 +18,11 @@ export type Subscription = {
   category: Category;
   price: number;
   billingCycle: BillingCycle;
+  /**
+   * アンカー日 (これまでの請求日のいずれか 1 日)。
+   * 「次回の請求日」は表示時に billing.ts の nextBillingFrom() で算出する。
+   * 形式: YYYY-MM-DD
+   */
   nextBillingDate: string;
   memo: string | null;
   createdAt: Date;
