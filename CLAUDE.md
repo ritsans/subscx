@@ -15,8 +15,8 @@ Your goal is to implement the requirements safely and report the changes concise
   - `## やったこと (新しい順)`: 完了した作業を日付付きで追記 (最新を上に)
 
 プラン参照:
-- 設計書  `docs/spec.md`
-- 設計計画書  `docs/plan.md`
+- 仕様書  `docs/spec.md`
+- 設計書  `docs/plans/`
 
 終了したタスクはチェックを入れること `e.g: [ ]  -> [x]`
  
@@ -27,6 +27,8 @@ Your goal is to implement the requirements safely and report the changes concise
 - Lint: `pnpm lint`
 - Lint autofix: `pnpm lint --write ./src`
 - Type Check: `pnpm tsc --noEmit`
+- Test (single run): `pnpm test`
+- Test (watch): `pnpm test:watch`
 - DB Schema Push: `pnpm drizzle-kit push`
 - DB Generate Migration: `pnpm drizzle-kit generate`
 
@@ -67,6 +69,12 @@ codebase全体を確認したい場合は、`temp/repomix-output.md`を参照す
 - `src/app/` — Pages / APIs / Server Actions (`actions.ts`)
 - `src/components/` — UI Components
 - `src/lib/` — Utils / Hooks。主要ファイル: `auth.ts` (Better Auth server), `auth-client.ts` (client), `db.ts` (Drizzle + libsql), `schema.ts` / `auth-schema.ts` (テーブル定義), `env.ts` (server-only), `get-session.ts`, `subscriptions.ts`
+- `src/proxy.ts` — ルートガード (旧middleware.ts)。未認証ユーザーは `/login` へリダイレクト。
+
+### 日付・課金ロジック
+
+- DBの `next_billing_date` カラムはアンカー日 (これまでの請求日のいずれか1日) を格納する。「次回請求日」の実値は `src/lib/billing.ts#nextBillingFrom()` で毎回算出する。直接書き換えない。
+- 日付処理はすべて `APP_TIME_ZONE = 'Asia/Tokyo'` 基準。`Date.now()` や `new Date()` を**直接使わずに必ず**、`formatYmdInAppTimeZone()` を経由する。
 
 ## Components / UI
 
