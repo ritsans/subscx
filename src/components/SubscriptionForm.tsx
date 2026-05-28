@@ -8,6 +8,11 @@ type Props = {
   subscription?: Subscription;
 };
 
+// ------------------------------------------------------------------
+// サブスクリプションの追加・編集モーダルフォームコンポーネント。
+// subscriptionが渡された場合は編集モード、渡されない場合は追加モードで動作する。
+// ------------------------------------------------------------------
+
 export function SubscriptionForm({ subscription }: Props) {
   const isEdit = subscription !== undefined;
 

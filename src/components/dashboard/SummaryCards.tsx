@@ -8,7 +8,7 @@ export function SummaryCards({ monthlyTotal, yearlyTotal, count }: Props) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {/* 今月の合計 */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-100 via-violet-100 to-purple-100 p-5 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-indigo-100 via-violet-100 to-purple-100 p-5 shadow-sm">
         <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-violet-200/50" />
         <div className="absolute -right-2 top-10 h-16 w-16 rounded-full bg-teal-200/40" />
         <p className="relative mb-3 font-medium text-violet-500 text-xs">今月の合計</p>

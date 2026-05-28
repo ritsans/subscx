@@ -1,3 +1,10 @@
+//
+// サービスの追加・編集用モーダルコンポーネント。
+//
+// サブスクリプションの名称、カテゴリ、料金、支払いサイクル、請求日、メモをユーザーが入力し、
+// 既存サービスの更新または新規サービスの作成を行います。
+//
+
 'use client';
 
 import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
@@ -18,15 +25,21 @@ type Props = {
   onClose: () => void;
 };
 
+// 1〜12 の month を受け取り、その0の月を受け取ることで最終日を返します。
+// たとえば２月なら28や29、４月なら30を返します。このロジックでうるう年も正しく処理が可能です。
 function daysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }
 
+// 「今日」を Asia/Tokyo 基準で取得します。
+// YYYY-MM-DD 形式の文字列を分割して数値に変換します。
 function appTodayParts(): { year: number; month: number; day: number } {
   const [year, month, day] = formatYmdInAppTimeZone(new Date()).split('-').map(Number);
   return { year, month, day };
 }
 
+// 選択した月日から「次に訪れる年」を推測します。
+// 例えば 6/1 を選んだとき、今日が 5/31 なら今年、今日が 6/2 なら来年になります。
 function inferYear(month: number, day: number): number {
   const today = appTodayParts();
   const thisYear = today.year;
@@ -35,6 +48,8 @@ function inferYear(month: number, day: number): number {
   return candidateMd >= todayMd ? thisYear : thisYear + 1;
 }
 
+// 月と日を受け取り、送信する nextBillingDate の文字列を生成します。
+// たとえば 2/30 のように存在しない日付が選ばれた場合でも、その月の最終日に丸めます。
 function anchorFromParts(month: number, day: number): string {
   const year = inferYear(month, day);
   const clampedDay = Math.min(day, daysInMonth(year, month));
@@ -49,20 +64,26 @@ export function ServiceModal({ state, onClose }: Props) {
   const sub = isEdit ? state.sub : undefined;
   const today = appTodayParts();
 
+  // 編集中なら既存サブスクの日付を初期値に、追加モードなら今日を初期値にします。
   const defaultMonth = sub ? Number(sub.nextBillingDate.split('-')[1]) : today.month;
   const defaultDay = sub ? Number(sub.nextBillingDate.split('-')[2]) : today.day;
 
   const [month, setMonth] = useState(defaultMonth);
   const [day, setDay] = useState(defaultDay);
 
+  // 月が変わったときに選択可能な日数を再計算します。
   const year = inferYear(month, day);
   const maxDay = daysInMonth(year, month);
   const clampedDay = Math.min(day, maxDay);
   const days = Array.from({ length: maxDay }, (_, i) => i + 1);
 
+  // hidden input に渡す nextBillingDate を生成します。
+  // 月/日だけの選択から YYYY-MM-DD 形式に変換します。
   const anchorDate = useMemo(() => anchorFromParts(month, day), [month, day]);
 
   const action = isEdit ? updateSubscriptionAction : createSubscriptionAction;
+  
+  // useActionState はフォーム送信時に使うサーバーアクションの hook です。
   const [, formAction, isPending] = useActionState(async (_prev: null, formData: FormData) => {
     await action(formData);
     onClose();
@@ -71,6 +92,8 @@ export function ServiceModal({ state, onClose }: Props) {
 
   const formRef = useRef<HTMLFormElement>(null);
 
+  // モーダルが開いたときにフォーム初期状態をリセットします。
+  // 編集時は既存の nextBillingDate を保持し、追加時は今日を初期値とします。
   useEffect(() => {
     if (isOpen) {
       const currentToday = appTodayParts();
