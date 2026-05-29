@@ -3,14 +3,14 @@
 自分用のサブスク管理アプリ。
 
 ## 現状
-v1 仕上げパック (警告バッジ / 次回請求日の遅延評価 / 主要サービスのロゴアイコン) 実装完了。`docs/plans/2026-05-26-v1-polish-pack.md` 参照。
+マイページ・カレンダー機能の実装計画書を作成完了。
 
 ## 次やること
-* カレンダー機能 : 月ごとのカレンダーに支払い日のバッジを付ける 
-* マイページ実装 : ユーザーに関する情報と表示と変更 -> `docs/plans/2026-05-26-mypage-minimum-design.md`参照
-* ソート機能 : サービスカードの並び順をドロップダウンを配置して動的に並び替える -> `docs/superpowers/specs/2026-05-28-card-sort-design.md`参照
-* サジェスト機能 : サービス名の入力中,simple-iconのリストにあるサービス名を候補として表示 -> `docs/plans/2026-05-28-service-name-autocomplete.md`参照
-* temp/dashboard_campa.pngを参考に抜けているUIを実装。
+1. ソート機能 : サービスカードの並び順をドロップダウンを配置して動的に並び替える -> spec: `docs/superpowers/specs/2026-05-28-card-sort-design.md`
+2. マイページ実装 : ユーザーに関する情報と表示と変更 -> spec: `docs/plans/2026-05-26-mypage-minimum-design.md` / plan: `docs/plans/2026-05-29-mypage-implementation.md`
+3. サジェスト機能 : サービス名の入力中, 厳選した有名サブスク (38件) を候補として表示。アイコンは simple-icons + Brandfetch SVG のハイブリッド構成 -> `docs/plans/2026-05-28-service-name-autocomplete.md`
+4. カレンダー機能 : 月ごとのカレンダーにサブスク支払い日のバッジを付けて可視化 -> spec: `docs/superpowers/specs/2026-05-29-calendar-design.md` / plan: `docs/plans/2026-05-29-calendar-implementation.md`
+5. UIまわりの細かい調整 : `temp/dashboard_campa.png`を参考に抜けているUIを実装。
 
 v2 候補 (グラフ / 年額予想 / CSV / 通知 / PWA) のうち、次に着手するものを選定
 

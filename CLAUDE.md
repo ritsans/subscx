@@ -7,12 +7,15 @@ Your goal is to implement the requirements safely and report the changes concise
 
 ## Project Notes (@README.md)
 
-- `README.md` をProject To-Do Listとして運用する。会話開始時およびタスク着手前に必ず参照すること。
+- `README.md` をProject To-Do List兼Memoryとして運用する。会話開始時およびタスク着手前に必ず参照すること。
 - 作業の進捗に応じて以下のセクションを更新する:
   - `## 現状`: 今取り組んでいることを1行で
   - `## 次やること`: 直近のTodoリスト
   - `## 詰まってる / 保留`: ブロッカーや判断保留事項
   - `## やったこと (新しい順)`: 完了した作業を日付付きで追記 (最新を上に)
+
+プロジェクト内に重要な更新があったら必ず`README.md`を更新せよ。
+運用ルールが変わってきたなと感じたら`CLAUDE.md`を更新せよ。
 
 プラン参照:
 - 仕様書  `docs/spec.md`
