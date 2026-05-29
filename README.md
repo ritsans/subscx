@@ -10,7 +10,9 @@
 2. マイページ実装 : ユーザーに関する情報と表示と変更 -> spec: `docs/plans/2026-05-26-mypage-minimum-design.md` / plan: `docs/plans/2026-05-29-mypage-implementation.md`
 3. サジェスト機能 : サービス名の入力中, 厳選した有名サブスク (38件) を候補として表示。アイコンは simple-icons + Brandfetch SVG のハイブリッド構成 -> `docs/plans/2026-05-28-service-name-autocomplete.md`
 4. カレンダー機能 : 月ごとのカレンダーにサブスク支払い日のバッジを付けて可視化 -> spec: `docs/superpowers/specs/2026-05-29-calendar-design.md` / plan: `docs/plans/2026-05-29-calendar-implementation.md`
-5. UIまわりの細かい調整 : `temp/dashboard_campa.png`を参考に抜けているUIを実装。
+5. アラートバッジ表示切替 : [新規ブランチ]サービスカードごとに「更新日までのアラート (あと◯日バッジ)」表示ON/OFFを選択可能に -> s
+pec: `docs/plans/2026-05-29-alert-toggle-design.md`
+6. UIまわりの細かい調整 : `temp/dashboard_campa.png`を参考に抜けているUIを実装。
 
 v2 候補 (グラフ / 年額予想 / CSV / 通知 / PWA) のうち、次に着手するものを選定
 
