@@ -3,7 +3,8 @@
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useActionState, useState } from 'react';
-import { initialAuthFormState, signupAction } from '@/app/auth-actions';
+import { signupAction } from '@/app/auth-actions';
+import { initialAuthFormState } from '@/app/auth-form-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

@@ -3,11 +3,8 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import type { AuthFormState } from '@/app/auth-form-state';
 import { auth } from '@/lib/auth';
-
-export type AuthFormState = {
-  error: string;
-};
 
 const loginSchema = z.object({
   email: z.email('メールアドレスの形式が不正です'),
@@ -20,8 +17,6 @@ const signupSchema = z.object({
   email: z.email('メールアドレスの形式が不正です'),
   password: z.string().min(1, 'パスワードは必須です'),
 });
-
-const INITIAL_STATE: AuthFormState = { error: '' };
 
 export async function loginAction(_prevState: AuthFormState, formData: FormData): Promise<AuthFormState> {
   const parsed = loginSchema.safeParse({
@@ -68,5 +63,3 @@ export async function signupAction(_prevState: AuthFormState, formData: FormData
 
   redirect('/dashboard');
 }
-
-export { INITIAL_STATE as initialAuthFormState };
