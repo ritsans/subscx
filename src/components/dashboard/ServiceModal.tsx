@@ -82,7 +82,7 @@ export function ServiceModal({ state, onClose }: Props) {
   const anchorDate = useMemo(() => anchorFromParts(month, day), [month, day]);
 
   const action = isEdit ? updateSubscriptionAction : createSubscriptionAction;
-  
+
   // useActionState はフォーム送信時に使うサーバーアクションの hook です。
   const [, formAction, isPending] = useActionState(async (_prev: null, formData: FormData) => {
     await action(formData);
