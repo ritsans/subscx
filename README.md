@@ -3,9 +3,10 @@
 自分用のサブスク管理アプリ。
 
 ## 現状
-マイページ・カレンダー機能の実装計画書を作成完了。
+次回支払日バグ (未来アンカー問題) の修正設計を作成完了。実装プラン待ち。
 
 ## 次やること
+0. [バグ修正] 次回支払日が未来アンカーで素通りする不具合 : `inferYear()` がアンカーを未来に倒す × `nextBillingFrom()` が未来アンカーを素通りする設計不整合。`nextBillingFrom` を周期直接算出に作り直し + `inferYear` 廃止 (保存年は今年固定、UIは不変) -> spec: `docs/superpowers/specs/2026-05-30-billing-anchor-future-fix-design.md`
 1. ソート機能 : サービスカードの並び順をドロップダウンを配置して動的に並び替える -> spec: `docs/superpowers/specs/2026-05-28-card-sort-design.md`
 2. マイページ実装 : ユーザーに関する情報と表示と変更 -> spec: `docs/plans/2026-05-26-mypage-minimum-design.md` / plan: `docs/plans/2026-05-29-mypage-implementation.md`
 3. サジェスト機能 : サービス名の入力中, 厳選した有名サブスク (38件) を候補として表示。アイコンは simple-icons + Brandfetch SVG のハイブリッド構成 -> `docs/plans/2026-05-28-service-name-autocomplete.md`
@@ -17,9 +18,11 @@ pec: `docs/plans/2026-05-29-alert-toggle-design.md`
 v2 候補 (グラフ / 年額予想 / CSV / 通知 / PWA) のうち、次に着手するものを選定
 
 ## 詰まってる / 保留
-
+- 既存の不正データ (ChatGPT `2026-07-19` / Claude `2027-05-12`) の DB 是正は任意。`nextBillingFrom` 修正で表示は自動的に直るため、アンカー値の手当ては実装後に判断。
 
 ## やったこと (新しい順)
+- 2026-05-30: ブランドアイコンのハイブリッド対応。`icon-map.ts` を `SimpleIcon` 単独から `IconEntry` discriminated union に拡張し、simple-icons 非対応ブランド (Disney+, Slack, ChatGPT, Nintendo 等) を `public/brand-icons/` の SVG/JPEG で補完。`ServiceIcon` を `kind` で分岐し brand-image を `<img>` 描画 (`bgColor` 背景色適用)。`<img>` は固定 28px のため `biome-ignore` で許可。**注意**: `.gitignore` の `*.svg` により `public/brand-icons/` の SVG 10件は git 管理外 (別環境では `docs/brandfetch-icons-checklist.md` を見て手動再取得が必要、`prime-video.jpeg` のみコミット済み)
+- 2026-05-30: ログイン時の `A "use server" file can only export async functions, found object` エラーを修正。原因は `src/app/auth-actions.ts` (`'use server'`) が async 関数以外 (`AuthFormState` 型 / `initialAuthFormState` オブジェクト) を export していたこと。型と定数を新規 `src/app/auth-form-state.ts` に切り出し、`auth-actions.ts` は関数のみ export に。`LoginForm.tsx` / `SignupForm.tsx` の import を分割。`pnpm dev` 再起動で Server Actions の制約チェックが厳格化され顕在化したと推定
 - 2026-05-27: 日本国内向けに日付基準を `Asia/Tokyo` へ固定。`formatYmdInAppTimeZone()` を追加し、dashboard の次回請求日ソート / 残日数表示 / サービス追加モーダルの初期日付が UTC で 1 日ずれないよう修正。Vitest に日本時間境界のテストを追加し、`pnpm test` / `pnpm lint` / `pnpm tsc --noEmit` 通過
 - 2026-05-27: v1 仕上げパック実装。`src/lib/billing.ts` で次回課金日の遅延評価を導入し、`nextBillingDate` をアンカー日として再解釈。7日以内の警告バッジ (`NextBillingBadge`) と主要サービスのロゴアイコン (`ServiceIcon` + `simple-icons`) を追加。モーダルの日付入力を月/日セレクトに変更。DB スキーマは無変更
 - 2026-05-25: 共通レイアウト整理。`Header` / `Footer` を `src/components/layout/` に配置し、ダッシュボードへ組み込み。ダークモード非対応方針を `AGENTS.md` / `docs/theme.md` / `src/components/guide.md` に明文化

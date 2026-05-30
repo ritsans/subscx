@@ -14,8 +14,9 @@ Your goal is to implement the requirements safely and report the changes concise
   - `## 詰まってる / 保留`: ブロッカーや判断保留事項
   - `## やったこと (新しい順)`: 完了した作業を日付付きで追記 (最新を上に)
 
-プロジェクト内に重要な更新があったら必ず`README.md`を更新せよ。
-運用ルールが変わってきたなと感じたら`CLAUDE.md`を更新せよ。
+[Every Task]
+プロジェクト内に**計画・実装・更新**があったら必ず`README.md`を更新せよ。
+**運用ルール**が変わってきたなと感じたら`CLAUDE.md`を更新せよ。
 
 プラン参照:
 - 仕様書  `docs/spec.md`
