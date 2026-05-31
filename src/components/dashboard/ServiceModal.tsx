@@ -38,20 +38,11 @@ function appTodayParts(): { year: number; month: number; day: number } {
   return { year, month, day };
 }
 
-// 選択した月日から「次に訪れる年」を推測します。
-// 例えば 6/1 を選んだとき、今日が 5/31 なら今年、今日が 6/2 なら来年になります。
-function inferYear(month: number, day: number): number {
-  const today = appTodayParts();
-  const thisYear = today.year;
-  const todayMd = (today.month - 1) * 100 + today.day;
-  const candidateMd = (month - 1) * 100 + day;
-  return candidateMd >= todayMd ? thisYear : thisYear + 1;
-}
-
 // 月と日を受け取り、送信する nextBillingDate の文字列を生成します。
+// 保存される年は今年固定 — 年は表示・計算に影響せず、月/日 (位相) だけが意味を持ちます。
 // たとえば 2/30 のように存在しない日付が選ばれた場合でも、その月の最終日に丸めます。
 function anchorFromParts(month: number, day: number): string {
-  const year = inferYear(month, day);
+  const { year } = appTodayParts();
   const clampedDay = Math.min(day, daysInMonth(year, month));
   return `${year}-${String(month).padStart(2, '0')}-${String(clampedDay).padStart(2, '0')}`;
 }
@@ -71,9 +62,8 @@ export function ServiceModal({ state, onClose }: Props) {
   const [month, setMonth] = useState(defaultMonth);
   const [day, setDay] = useState(defaultDay);
 
-  // 月が変わったときに選択可能な日数を再計算します。
-  const year = inferYear(month, day);
-  const maxDay = daysInMonth(year, month);
+  // 月が変わったときに選択可能な日数を再計算します。年は今年固定 (位相のみ意味を持つ)。
+  const maxDay = daysInMonth(today.year, month);
   const clampedDay = Math.min(day, maxDay);
   const days = Array.from({ length: maxDay }, (_, i) => i + 1);
 

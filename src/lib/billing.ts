@@ -39,25 +39,48 @@ function lastDayOfMonth(year: number, monthIndex: number): number {
 
 /**
  * アンカー日と課金サイクルから、today 以上で最も近い課金日を返す。
- * 月末日は遷移先の末日に丸めるが、アンカーの元の day を保持して毎回基準にする。
+ * アンカーの月/日 (位相) を基準に today の年月から直接算出する。
+ * 未来アンカー・過去アンカーどちらでも正しく動作する。
+ * 月末締め (originalDay) は遷移先の末日に丸めるが、長い月では元の日に戻る。
  */
 export function nextBillingFrom(anchor: string, cycle: BillingCycle, today: string): string {
   const anchorDate = parseYmd(anchor);
   const todayDate = parseYmd(today);
   const originalDay = anchorDate.getUTCDate();
-  const step = cycle === 'monthly' ? 1 : 12;
-  let months = 0;
-  let current = anchorDate;
-  while (current.getTime() < todayDate.getTime()) {
-    months += step;
-    const targetMonthIndex = anchorDate.getUTCMonth() + months;
-    const yearAdjusted = anchorDate.getUTCFullYear() + Math.floor(targetMonthIndex / 12);
-    const monthAdjusted = ((targetMonthIndex % 12) + 12) % 12;
-    const lastDay = lastDayOfMonth(yearAdjusted, monthAdjusted);
-    const day = Math.min(originalDay, lastDay);
-    current = new Date(Date.UTC(yearAdjusted, monthAdjusted, day));
+
+  if (cycle === 'monthly') {
+    // 候補月 = today の年/月 から始め、候補日 < today なら翌月へ進める
+    let candidateYear = todayDate.getUTCFullYear();
+    let candidateMonthIndex = todayDate.getUTCMonth();
+    const clampDay = (y: number, mi: number) => Math.min(originalDay, lastDayOfMonth(y, mi));
+    let candidateDay = clampDay(candidateYear, candidateMonthIndex);
+    let candidate = new Date(Date.UTC(candidateYear, candidateMonthIndex, candidateDay));
+
+    if (candidate.getTime() < todayDate.getTime()) {
+      const nextMonthIndex = candidateMonthIndex + 1;
+      candidateYear = candidateYear + Math.floor(nextMonthIndex / 12);
+      candidateMonthIndex = nextMonthIndex % 12;
+      candidateDay = clampDay(candidateYear, candidateMonthIndex);
+      candidate = new Date(Date.UTC(candidateYear, candidateMonthIndex, candidateDay));
+    }
+
+    return formatYmd(candidate);
   }
-  return formatYmd(current);
+
+  // yearly: アンカーの月/日 を基準に today の年を候補にする
+  const anchorMonthIndex = anchorDate.getUTCMonth();
+  const clampDay = (y: number) => Math.min(originalDay, lastDayOfMonth(y, anchorMonthIndex));
+  let candidateYear = todayDate.getUTCFullYear();
+  let candidateDay = clampDay(candidateYear);
+  let candidate = new Date(Date.UTC(candidateYear, anchorMonthIndex, candidateDay));
+
+  if (candidate.getTime() < todayDate.getTime()) {
+    candidateYear += 1;
+    candidateDay = clampDay(candidateYear);
+    candidate = new Date(Date.UTC(candidateYear, anchorMonthIndex, candidateDay));
+  }
+
+  return formatYmd(candidate);
 }
 
 /**

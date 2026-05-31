@@ -25,12 +25,29 @@ describe('formatYmdInAppTimeZone', () => {
 });
 
 describe('nextBillingFrom (monthly)', () => {
-  it('returns anchor when anchor is in the future', () => {
+  // 未来アンカーでも today の月に候補日を作り、過去なら翌月へ
+  it('uses current month when anchor day is still ahead (future anchor)', () => {
+    // ChatGPT 実例: 2026-07-19 アンカー, today 2026-05-30 → 毎月19日 → 2026-05-30 < 19日なので 2026-05-19? → 候補2026-05-19 < today → 翌月 2026-06-19
+    expect(nextBillingFrom('2026-07-19', 'monthly', '2026-05-30')).toBe('2026-06-19');
+  });
+
+  it('uses current month when anchor day is still ahead this month', () => {
+    // today の月の候補日 >= today なら today の月を返す
     expect(nextBillingFrom('2026-01-15', 'monthly', '2026-01-10')).toBe('2026-01-15');
   });
 
-  it('returns anchor when anchor equals today', () => {
+  it('returns today when anchor day equals today', () => {
     expect(nextBillingFrom('2026-01-15', 'monthly', '2026-01-15')).toBe('2026-01-15');
+  });
+
+  // Claude 実例: 2027-05-12 アンカー, today 2026-05-30 → 毎月12日 → 2026-05-12 < today → 2026-06-12
+  it('handles far-future yearly anchor for monthly cycle (Claude example)', () => {
+    expect(nextBillingFrom('2027-05-12', 'monthly', '2026-05-30')).toBe('2026-06-12');
+  });
+
+  // 年境界: 12月アンカーで today が 12月末 → 翌年1月
+  it('wraps to next year in December', () => {
+    expect(nextBillingFrom('2026-12-15', 'monthly', '2026-12-20')).toBe('2027-01-15');
   });
 
   it('advances one month when anchor is just past', () => {
@@ -55,11 +72,17 @@ describe('nextBillingFrom (monthly)', () => {
 });
 
 describe('nextBillingFrom (yearly)', () => {
-  it('returns anchor when anchor is in the future', () => {
-    expect(nextBillingFrom('2027-06-01', 'yearly', '2026-01-01')).toBe('2027-06-01');
+  // 未来アンカーでも today の年に当てた候補日 (2026-06-01) が today 以上なら今年を返す
+  it('uses current year when anchor month/day is still ahead this year', () => {
+    expect(nextBillingFrom('2027-06-01', 'yearly', '2026-01-01')).toBe('2026-06-01');
   });
 
-  it('advances one year when anchor is past', () => {
+  // today より前の月/日は翌年へ
+  it('advances to next year when anchor month/day has already passed this year', () => {
+    expect(nextBillingFrom('2025-06-01', 'yearly', '2026-07-01')).toBe('2027-06-01');
+  });
+
+  it('advances one year when anchor is past (same month/day earlier in year)', () => {
     expect(nextBillingFrom('2025-06-01', 'yearly', '2026-01-01')).toBe('2026-06-01');
   });
 
