@@ -1,5 +1,6 @@
 import 'server-only';
 import { and, eq } from 'drizzle-orm';
+import { toMonthly } from './billing';
 import { db } from './db';
 import { subscriptions } from './schema';
 import type { BillingCycle, Category, Subscription } from './types';
@@ -70,4 +71,8 @@ export async function updateSubscription(
 
 export async function removeSubscription(id: string, userId: string): Promise<void> {
   await db.delete(subscriptions).where(and(eq(subscriptions.id, id), eq(subscriptions.userId, userId)));
+}
+
+export function getMonthlyTotal(subs: Subscription[]): number {
+  return subs.reduce((acc, s) => acc + toMonthly(s.price, s.billingCycle), 0);
 }

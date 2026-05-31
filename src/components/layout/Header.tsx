@@ -1,12 +1,12 @@
 import Link from 'next/link';
+import { UserMenu } from './UserMenu';
 
 type Props = {
   userName: string;
+  userEmail: string;
 };
 
-export function Header({ userName }: Props) {
-  const initials = userName.slice(0, 2).toUpperCase();
-
+export function Header({ userName, userEmail }: Props) {
   return (
     <header className="sticky top-0 z-40 border-stone-200/60 border-b bg-[#f7f5f2]/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
@@ -40,12 +40,7 @@ export function Header({ userName }: Props) {
               />
             </svg>
           </button>
-          <div
-            className="flex h-8 w-8 select-none items-center justify-center rounded-full bg-violet-600 font-semibold text-white text-xs"
-            title={userName}
-          >
-            {initials}
-          </div>
+          <UserMenu userName={userName} userEmail={userEmail} />
         </div>
       </div>
     </header>

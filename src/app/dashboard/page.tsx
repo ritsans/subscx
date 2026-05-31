@@ -19,7 +19,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f7f5f2]">
-      <Header userName={session.user.name ?? session.user.email} />
+      <Header userName={session.user.name ?? session.user.email} userEmail={session.user.email} />
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-8">
         <SummaryCards monthlyTotal={monthlyTotal} yearlyTotal={yearlyTotal} count={subs.length} />
