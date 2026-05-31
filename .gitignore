@@ -46,3 +46,7 @@ next-env.d.ts
 
 # agent
 .agents
+
+# playwright (ローカル開発専用、環境依存のため除外)
+/playwright/
+/scripts/auth-setup.ts

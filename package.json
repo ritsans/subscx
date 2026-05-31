@@ -9,7 +9,9 @@
     "lint": "biome check",
     "format": "biome format --write",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "auth-setup": "tsx scripts/auth-setup.ts",
+    "open-dev": "playwright open --load-storage=playwright/.auth/session.json http://localhost:3000/dashboard"
   },
   "dependencies": {
     "@holiday-jp/holiday_jp": "^2.5.1",
@@ -39,7 +41,9 @@
     "@types/react-dom": "^19",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
+    "playwright": "^1.60.0",
     "tailwindcss": "^4",
+    "tsx": "^4.22.3",
     "typescript": "^5",
     "vitest": "^4.1.7"
   }
