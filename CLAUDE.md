@@ -12,7 +12,7 @@ Your goal is to implement the requirements safely and report the changes concise
   - `## 現状`: 今取り組んでいることを1行で
   - `## 次やること`: 直近のTodoリスト
   - `## 詰まってる / 保留`: ブロッカーや判断保留事項
-  - `## やったこと (新しい順)`: 完了した作業を日付付きで追記 (最新を上に)
+  - `## やったこと (新しい順)`: 完了した作業を日付付きで追記 (最新を上に)。記録が9行以上になったら要約し、`docs/history.md`へ転記すること。
 
 [Every Task]
 プロジェクト内に**計画・実装・更新**があったら必ず`README.md`を更新せよ。
@@ -63,10 +63,6 @@ Your goal is to implement the requirements safely and report the changes concise
 - Tailwind クラスは `useSortedClasses` で自動ソート (warn)
 - フォーマット/import 整列は `pnpm format` または `pnpm lint` に任せる
 
-## Codebase
-
-codebase全体を確認したい場合は、`temp/repomix-output.md`を参照すること。
-
 ## Architecture
 
 ディレクトリ構造を厳守。
@@ -98,7 +94,7 @@ Access to sensitive files such as `.env.local` is prohibited. Do not perform any
 - 外部ライブラリは、必要なものが不足・見つからない場合にのみインストールを提案する。`pnpm add` 等の実行はユーザーに
 委ね、自分では実行しない。
 - プラン提示後、ユーザーが明示的に **「実装して」** と言うまでコードを書き始めない。
-- 
+
 - Read existing files before writing. Don't re-read unless changed.
 - Thorough in reasoning, concise in output.
 - Skip files over 100KB unless required.
