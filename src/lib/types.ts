@@ -28,3 +28,20 @@ export type Subscription = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type CalendarEvent = {
+  date: string;
+  title: string;
+  sourceId: string;
+};
+
+export type CalendarDay = {
+  ymd: string;
+  year: number;
+  month: number;
+  day: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  dayOfWeek: number;
+  holidayName: string | null;
+};

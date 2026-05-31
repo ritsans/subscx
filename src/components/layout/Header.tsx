@@ -13,13 +13,19 @@ export function Header({ userName, userEmail }: Props) {
         <div className="flex items-center gap-8">
           <span className="font-semibold text-sm text-stone-900 tracking-tight">subscx</span>
           <nav className="hidden items-center gap-1 sm:flex">
-            {(['サービス', 'カレンダー', '設定'] as const).map((label) => (
+            {(
+              [
+                { label: 'サービス', href: '/dashboard' },
+                { label: 'カレンダー', href: '/calendar' },
+                { label: '設定', href: '/mypage' },
+              ] as const
+            ).map((item) => (
               <Link
-                key={label}
-                href="#"
+                key={item.label}
+                href={item.href}
                 className="rounded-lg px-3 py-1.5 font-medium text-stone-500 text-xs transition-colors hover:bg-stone-100/80 hover:text-stone-900"
               >
-                {label}
+                {item.label}
               </Link>
             ))}
           </nav>
